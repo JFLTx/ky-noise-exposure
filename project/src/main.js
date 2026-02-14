@@ -6,16 +6,15 @@ import "maplibre-gl/dist/maplibre-gl.css";
 // const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY;
 // const baseStyleUrl = `https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/style.json?key=${MAPTILER_KEY}`;
 
-const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY;
-const MAPTILER_STYLE = `https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/style.json?key=${MAPTILER_KEY}`;
+const mapTiler = `https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/style.json?key=VR7FKTd6lXA4PKRQVzfY`;
 
 const map = new maplibregl.Map({
   container: "map",
-  style: MAPTILER_STYLE,
+  style: mapTiler,
   center: [-85.5, 37.6],
-  zoom: 8,
-  minZoom: 7,
-  maxZoom: 18,
+  zoom: 7,
+  minZoom: 6,
+  maxZoom: 16,
 });
 
 map.on("load", () => {
