@@ -1,0 +1,24 @@
+{
+  "version": 8,
+  "sources": {
+    "ky-noise": {
+      "type": "raster",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_transportation_noise/MapServer/tile/{z}/{y}/{x}"
+      ],
+      "tileSize": 256,
+      "minzoom": 7,
+      "maxzoom": 16
+    }
+  },
+  "layers": [
+    {
+      "id": "noise",
+      "type": "raster",
+      "source": "ky-noise",
+      "paint": {
+        "raster-opacity": 1
+      }
+    }
+  ]
+}
