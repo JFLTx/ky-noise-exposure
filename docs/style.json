@@ -1,23 +1,291 @@
 {
   "version": 8,
+  "name": "KY Noise + Base",
+  "sprite": "https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/sprite?key=VR7FKTd6lXA4PKRQVzfY",
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=VR7FKTd6lXA4PKRQVzfY",
   "sources": {
+    "maptiler_planet": {
+      "type": "vector",
+      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=VR7FKTd6lXA4PKRQVzfY"
+    },
     "ky-noise": {
       "type": "raster",
       "tiles": [
         "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_transportation_noise/MapServer/tile/{z}/{y}/{x}"
       ],
       "tileSize": 256,
-      "minzoom": 7,
-      "maxzoom": 16
+      "minzoom": 6,
+      "maxzoom": 17
+    },
+    "khc-cemeteries": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/khc_cemeteries/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 11,
+      "maxzoom": 17
+    },
+    "ky-mask": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_mask/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 1,
+      "maxzoom": 17
     }
   },
+
   "layers": [
     {
-      "id": "noise",
+      "id": "Background",
+      "type": "background",
+      "paint": { "background-color": "hsl(240, 100%, 4%)" }
+    },
+    {
+      "id": "Water",
+      "type": "fill",
+      "source": "maptiler_planet",
+      "source-layer": "water",
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "fill-antialias": true,
+        "fill-color": "hsl(228, 91%, 9%)"
+      },
+      "filter": [
+        "all",
+        ["!=", "brunnel", "tunnel"],
+        ["==", "$type", "Polygon"],
+        ["!=", "intermittent", 1]
+      ]
+    },
+    {
+      "id": "River",
+      "type": "line",
+      "source": "maptiler_planet",
+      "source-layer": "waterway",
+      "minzoom": 12,
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "line-color": "hsl(229, 91%, 9%)",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          2,
+          15,
+          2.5,
+          20,
+          4
+        ]
+      }
+    },
+    {
+      "id": "KHC cemeteries fill",
+      "type": "fill",
+      "source": "khc-cemeteries",
+      "source-layer": "KHC Cemeteries",
+      "minzoom": 11,
+      "paint": {
+        "fill-color": "#1A2B1F",
+        "fill-opacity": 1
+      }
+    },
+    {
+      "id": "Road network",
+      "type": "line",
+      "source": "maptiler_planet",
+      "source-layer": "transportation",
+      "minzoom": 6,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": [
+          "interpolate",
+          ["exponential", 1],
+          ["zoom"],
+          6,
+          "#4a464d",
+          10,
+          "#4a464d",
+          16,
+          "#4a464d"
+        ],
+        "line-opacity": 1,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          7,
+          ["match", ["get", "class"], ["motorway", "trunk"], 1, 0],
+          10,
+          ["match", ["get", "class"], ["motorway", "trunk"], 2, 0],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            ["motorway", "trunk"],
+            3.5,
+            "primary",
+            0.75,
+            0
+          ],
+          13,
+          [
+            "match",
+            ["get", "class"],
+            ["motorway", "trunk"],
+            5,
+            "primary",
+            2.5,
+            0.5
+          ],
+          15,
+          ["match", ["get", "class"], "motorway", 7, "primary", 6, 3],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            ["motorway", "trunk"],
+            8,
+            "primary",
+            7,
+            5
+          ],
+          17,
+          ["match", ["get", "class"], ["motorway", "trunk"], 9, 8]
+        ]
+      },
+      "filter": [
+        "in",
+        "class",
+        "motorway",
+        "trunk",
+        "primary",
+        "secondary",
+        "tertiary",
+        "minor",
+        "service",
+        "pier"
+      ]
+    },
+    {
+      "id": "Building",
+      "type": "fill",
+      "source": "maptiler_planet",
+      "source-layer": "building",
+      "minzoom": 16,
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "fill-antialias": true,
+        "fill-color": "hsl(0, 14%, 0%)",
+        "fill-opacity": {
+          "base": 1,
+          "stops": [
+            [13, 0],
+            [16, 1]
+          ]
+        },
+        "fill-outline-color": "hsl(0, 14%, 0%)"
+      }
+    },
+    {
+      "id": "Noise",
       "type": "raster",
       "source": "ky-noise",
+      "minzoom": 6,
+      "maxzoom": 17,
       "paint": {
-        "raster-opacity": 1
+        "raster-opacity": 1,
+        "raster-resampling": "linear"
+      }
+    },
+    {
+      "id": "River labels",
+      "type": "symbol",
+      "source": "maptiler_planet",
+      "source-layer": "waterway",
+      "minzoom": 10,
+      "layout": {
+        "symbol-placement": "line",
+        "symbol-spacing": 200,
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Italic"],
+        "text-max-width": 9,
+        "text-rotation-alignment": "map",
+        "text-size": {
+          "stops": [
+            [14, 12],
+            [18, 19]
+          ]
+        },
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "hsl(0, 14%, 25%)",
+        "text-halo-color": "hsl(0, 14%, 10%)",
+        "text-halo-width": 1
+      },
+      "filter": ["has", "name"]
+    },
+
+    {
+      "id": "Road labels",
+      "type": "symbol",
+      "source": "maptiler_planet",
+      "source-layer": "transportation_name",
+      "minzoom": 10,
+      "layout": {
+        "symbol-placement": "line",
+        "symbol-spacing": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          20,
+          250,
+          22,
+          600
+        ],
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Bold"],
+        "text-rotation-alignment": "map",
+        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13],
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "#feb555",
+        "text-halo-color": "#470763",
+        "text-halo-width": 3
+      },
+      "filter": [
+        "in",
+        "class",
+        "primary",
+        "secondary",
+        "tertiary",
+        "trunk",
+        "minor",
+        "service",
+        "track"
+      ]
+    },
+    {
+      "id": "mask",
+      "type": "fill",
+      "source": "ky-mask",
+      "source-layer": "KY_erase",
+      "min-zoom": 7,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "fill-color": "#000014",
+        "fill-opacity": 1
       }
     }
   ]
