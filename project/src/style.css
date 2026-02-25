@@ -1,2 +1,51 @@
 @import "tailwindcss"; 
 
+#heatmap-legend {
+  position: absolute;
+  bottom: 50px;
+  right: 15px;
+  background: rgba(19, 14, 53, 0.8);
+  padding: 5px 6px;
+  border-radius: 6px;
+  box-shadow: 0 1px 6px rgba(58, 15, 111, 0.5);
+  /* font-family: "Libre Franklin", sans-serif; */
+  font-size: 14px;
+  z-index: 999;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+#heatmap-legend .legend-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-align: center;
+  color: whitesmoke;
+}
+
+.heat-gradient-bar {
+  height: 10px;
+  width: 300px;
+  background: linear-gradient(
+    to right,
+    #000014, /* 0% */
+    #140E36, /* 10% */
+    #3A0F6F, /* 20% */
+    #641A80, /* 30% */
+    #8B2982, /* 40% */
+    #B3637A, /* 50% */
+    #DD496A, /* 60% */
+    #f76f5c, /* 70% */
+    #FF9E6C, /* 80% */
+    #FFCE91, /* 90% */
+    #FDFEC0  /* 100% */
+  );
+  margin-bottom: 4px;
+  border-radius: 4px;
+}
+
+.heat-gradient-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: whitesmoke;
+}
