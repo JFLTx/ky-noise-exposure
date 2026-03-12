@@ -17,6 +17,15 @@
       "minzoom": 6,
       "maxzoom": 17
     },
+    "noise-polygons": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_noise_polygons/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 11,
+      "maxzoom": 17
+    },
     "khc-cemeteries": {
       "type": "vector",
       "tiles": [
@@ -26,9 +35,44 @@
       "minzoom": 11,
       "maxzoom": 17
     },
+    "ky-parcels": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_parcels/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 11,
+      "maxzoom": 17
+    },
+    "ky-parks": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_parks/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 11,
+      "maxzoom": 17
+    },
+    "kytc-aadt": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/aadt_2026/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 8,
+      "maxzoom": 17
+    },
     "industrial-sites": {
       "type": "geojson",
       "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Industrial_Site_Boundaries_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
+    },
+    "schools": {
+      "type": "geojson",
+      "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Schools_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
+    },
+    "libraries": {
+      "type": "geojson",
+      "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Libraries_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
     },
     "ky-mask": {
       "type": "vector",
@@ -131,13 +175,67 @@
       }
     },
     {
+      "id": "KY Parcels Fill",
+      "type": "fill",
+      "source": "ky-parcels",
+      "source-layer": "parcels",
+      "minzoom": 11,
+      "paint": {
+        "fill-color": "#F5F5F5",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13,
+          0.01,
+          15,
+          0.05,
+          17,
+          0.075
+        ]
+      }
+    },
+    {
+      "id": "KY Parcels Outline",
+      "type": "line",
+      "source": "ky-parcels",
+      "source-layer": "parcels",
+      "minzoom": 11,
+      "paint": {
+        "line-color": "#F5F5F5",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13,
+          1,
+          15,
+          1.15,
+          17,
+          1.25
+        ],
+        "line-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13,
+          0.2,
+          15,
+          0.25,
+          17,
+          0.38
+        ]
+      }
+    },
+
+    {
       "id": "KHC cemeteries fill",
       "type": "fill",
       "source": "khc-cemeteries",
       "source-layer": "KHC Cemeteries",
       "minzoom": 11,
       "paint": {
-        "fill-color": "#1A2B1F",
+        "fill-color": "#01662d",
         "fill-opacity": 1
       }
     },
@@ -232,6 +330,59 @@
           0.5,
           10,
           0.8
+        ]
+      }
+    },
+    {
+      "id": "KY Parks Fill",
+      "type": "fill",
+      "source": "ky-parks",
+      "source-layer": "KY_Parks",
+      "minzoom": 11,
+      "paint": {
+        "fill-color": "#00cc36",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0.1,
+          12,
+          0.25,
+          14,
+          0.5
+        ]
+      }
+    },
+    {
+      "id": "KY Parks Outline",
+      "type": "line",
+      "source": "ky-parks",
+      "source-layer": "KY_Parks",
+      "minzoom": 11,
+      "paint": {
+        "line-color": "#F5F5F5",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          1,
+          12,
+          1.15,
+          14,
+          1.25
+        ],
+        "line-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          1,
+          12,
+          1.5,
+          14,
+          2
         ]
       }
     },
@@ -378,8 +529,7 @@
             [13, 0],
             [16, 1]
           ]
-        },
-        "fill-outline-color": "hsl(0, 14%, 0%)"
+        }
       }
     },
     {
@@ -391,6 +541,18 @@
       "paint": {
         "raster-opacity": 0.8,
         "raster-resampling": "linear"
+      }
+    },
+    {
+      "id": "Noise polygons",
+      "type": "fill",
+      "source": "noise-polygons",
+      "source-layer": "noise_raster_polygons",
+      "minzoom": 10,
+      "maxzoom": 17,
+      "paint": {
+        "fill-color": "#F5F5F5",
+        "fill-opacity": 0
       }
     },
     {
@@ -446,6 +608,179 @@
         "text-halo-width": 1.5
       },
       "filter": ["has", "name"]
+    },
+    {
+      "id": "KYTC Traffic Glow",
+      "type": "line",
+      "source": "kytc-aadt",
+      "source-layer": "aadt_2026",
+      "minzoom": 8,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "line-sort-key": ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": [
+          "step",
+          ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+          "#140e36",
+          400,
+          "#2a1458",
+          1600,
+          "#3a0f6f",
+          2400,
+          "#641a80",
+          5000,
+          "#8b2982",
+          15000,
+          "#b3637a",
+          25000,
+          "#dd496a",
+          50000,
+          "#ff9e6c",
+          100000,
+          "#fdfec0"
+        ],
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8,
+          [
+            "step",
+            ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+            1.2,
+            400,
+            1.8,
+            1600,
+            2.2,
+            2400,
+            2.8,
+            5000,
+            3.4,
+            15000,
+            4.2,
+            25000,
+            5,
+            50000,
+            6,
+            100000,
+            7
+          ],
+          13,
+          [
+            "step",
+            ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+            2.4,
+            400,
+            3.2,
+            1600,
+            4,
+            2400,
+            4.8,
+            5000,
+            5.8,
+            15000,
+            7,
+            25000,
+            8.5,
+            50000,
+            10,
+            100000,
+            12
+          ]
+        ],
+        "line-opacity": 0.2,
+        "line-blur": 3
+      }
+    },
+    {
+      "id": "KYTC Traffic Counts",
+      "type": "line",
+      "source": "kytc-aadt",
+      "source-layer": "aadt_2026",
+      "minzoom": 8,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "line-sort-key": ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": [
+          "step",
+          ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+          "#140e36",
+          400,
+          "#2a1458",
+          1600,
+          "#3a0f6f",
+          2400,
+          "#641a80",
+          5000,
+          "#8b2982",
+          15000,
+          "#b3637a",
+          25000,
+          "#dd496a",
+          50000,
+          "#ff9e6c",
+          100000,
+          "#fdfec0"
+        ],
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8,
+          [
+            "step",
+            ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+            0.6,
+            400,
+            1.1,
+            1600,
+            1.4,
+            2400,
+            1.8,
+            5000,
+            2.4,
+            15000,
+            3.2,
+            25000,
+            4,
+            50000,
+            5,
+            100000,
+            6
+          ],
+          13,
+          [
+            "step",
+            ["coalesce", ["to-number", ["get", "LASTCNT"]], 0],
+            1.2,
+            400,
+            1.8,
+            1600,
+            2.4,
+            2400,
+            3,
+            5000,
+            4,
+            15000,
+            5,
+            25000,
+            6.2,
+            50000,
+            7.8,
+            100000,
+            9.5
+          ]
+        ],
+        "line-opacity": 0.8
+      }
     },
     {
       "id": "Road labels",
@@ -725,7 +1060,51 @@
       }
     },
     {
-      "id": "Bordern city labels",
+      "id": "schools-symbol",
+      "type": "symbol",
+      "source": "schools",
+      "minzoom": 11,
+      "layout": {
+        "icon-image": "/school.svg",
+        "icon-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0.08,
+          14,
+          0.11,
+          16,
+          0.14
+        ],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true
+      }
+    },
+    {
+      "id": "libraries-symbol",
+      "type": "symbol",
+      "source": "libraries",
+      "minzoom": 11,
+      "layout": {
+        "icon-image": "/library.svg",
+        "icon-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0.08,
+          14,
+          0.11,
+          16,
+          0.14
+        ],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true
+      }
+    },
+    {
+      "id": "Border city labels",
       "type": "symbol",
       "source": "maptiler_planet",
       "source-layer": "place",

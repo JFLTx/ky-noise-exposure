@@ -1,18 +1,20 @@
-@import "tailwindcss"; 
+@import "tailwindcss";
 
 #heatmap-legend {
   position: absolute;
-  bottom: 50px;
-  right: 15px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80vw, 500px);
   background: rgba(19, 14, 53, 0.8);
   padding: 5px 6px;
   border-radius: 6px;
   box-shadow: 0 1px 6px rgba(58, 15, 111, 0.5);
-  /* font-family: "Libre Franklin", sans-serif; */
   font-size: 14px;
   z-index: 999;
   transition: opacity 0.3s ease;
   opacity: 1;
+  box-sizing: border-box;
 }
 
 #heatmap-legend .legend-title {
@@ -22,22 +24,31 @@
   color: whitesmoke;
 }
 
+.heat-gradient-wrap {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  margin-bottom: 6px;
+}
+
 .heat-gradient-bar {
+  position: absolute;
+  top: 4px;
   height: 10px;
-  width: 300px;
+  width: 100%;
   background: linear-gradient(
     to right,
-    #000014, /* 0% */
-    #140E36, /* 10% */
-    #3A0F6F, /* 20% */
-    #641A80, /* 30% */
-    #8B2982, /* 40% */
-    #B3637A, /* 50% */
-    #DD496A, /* 60% */
-    #f76f5c, /* 70% */
-    #FF9E6C, /* 80% */
-    #FFCE91, /* 90% */
-    #FDFEC0  /* 100% */
+    #000014, /* 0% */ 
+    #140e36, /* 10% */ 
+    #3a0f6f, /* 20% */
+    #641a80, /* 30% */
+    #8b2982, /* 40% */ 
+    #b3637a, /* 50% */ 
+    #dd496a, /* 60% */ 
+    #f76f5c, /* 70% */ 
+    #ff9e6c, /* 80% */ 
+    #ffce91, /* 90% */ 
+    #fdfec0 /* 100% */
   );
   margin-bottom: 4px;
   border-radius: 4px;
@@ -48,4 +59,48 @@
   justify-content: space-between;
   font-size: 11px;
   color: whitesmoke;
+}
+
+#heatmap-indicator {
+  position: absolute;
+  top: -2px;
+  left: 0%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid white;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    left 0.2s ease,
+    opacity 0.2s,
+    easeborder-top-color 0.2s ease;
+  z-index: 2;
+}
+
+.heat-gradient-labels {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-size: 11px;
+  color: whitesmoke;
+}
+
+.heat-gradient-labels span:first-child {
+  justify-self: start;
+}
+
+.heat-gradient-labels span:last-child {
+  justify-self: end;
+}
+
+#heatmap-readout {
+  justify-self: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: whitesmoke;
+  transition: color 0.2s ease;
 }

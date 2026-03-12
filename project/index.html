@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/svg+xml" href="/sound.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>project</title>
 </head>
@@ -14,14 +14,19 @@
 
   <!-- heatmap legend -->
       <div id="heatmap-legend">
-        <div class="legend-title">Noise Levels</div>
-        <div class="heat-gradient-bar"></div>
-        <div class="heat-gradient-labels">
-          <span>45.0 dB</span>
-          <!-- <span>Medium</span> -->
-          <span>124.0 dB</span>
-        </div>
-      </div>
+    <div class="legend-title">Noise Levels</div>
+
+    <div class="heat-gradient-wrap">
+      <div class="heat-gradient-bar"></div>
+      <div id="heatmap-indicator"></div>
+    </div>
+
+    <div class="heat-gradient-labels">
+      <span>45 dB</span>
+      <span id="heatmap-readout">Click map</span>
+      <span>124 dB</span>
+    </div>
+  </div>
     </div>
 </body>
 

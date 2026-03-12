@@ -2,12 +2,6 @@ import maplibregl from "maplibre-gl";
 import "/src/style.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// import maptiler key so it is not exposed
-// const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY;
-// const baseStyleUrl = `https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/style.json?key=${MAPTILER_KEY}`;
-
-// const mapTiler = `https://api.maptiler.com/maps/019c5d5d-06b2-70c4-8771-110800224358/style.json?key=VR7FKTd6lXA4PKRQVzfY`;
-
 const map = new maplibregl.Map({
   container: "map",
   style: "/style.json",
@@ -17,22 +11,109 @@ const map = new maplibregl.Map({
   maxZoom: 16,
 });
 
-map.on('click', 'Noise polygons', (e) => {
+// set variables to min and max noise levels in map
+const min = 45;
+const max = 124;
+
+const indicator = document.getElementById("heatmap-indicator");
+const readout = document.getElementById("heatmap-readout");
+
+// force the clicked noise value to stay in legend range
+// legend range is the min and max values
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+// When the user clicks, clamps the clicked value to the legend range
+// calculates the percentage position along the bar
+// moves the triangle to the % bar position
+// Lastly, update the readout value to the clicked value
+function updateLegend(value) {
+  if (!Number.isFinite(value)) return;
+
+  const clamped = clamp(value, min, max);
+  const percent = ((clamped - min) / (max - min)) * 100;
+  const pretty = clamped.toFixed(1);
+
+  indicator.style.left = `${percent}%`;
+  indicator.style.opacity = "1";
+
+  readout.textContent = `${pretty} dB`;
+}
+
+// keep track of icons currently being loaded
+const loadingImages = new Set();
+
+map.on("styleimagemissing", async (e) => {
+  const id = e.id;
+
+  if (id !== "/school.svg" && id !== "/library.svg") return;
+  if (map.hasImage(id)) return;
+  if (loadingImages.has(id)) return;
+
+  loadingImages.add(id);
+
+  try {
+    const response = await fetch(id);
+    if (!response.ok) throw new Error(`Failed to fetch ${id}`);
+
+    const svgText = await response.text();
+    const svgDataUrl =
+      "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgText);
+
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = svgDataUrl;
+    });
+
+    if (!map.hasImage(id)) {
+      map.addImage(id, image);
+    }
+
+    // force a repaint once the image is added
+    map.triggerRepaint();
+  } catch (err) {
+    console.error(`Error loading icon ${id}:`, err);
+  } finally {
+    loadingImages.delete(id);
+  }
+});
+
+map.on("click", "KYTC Traffic Counts", (e) => {
+  const f = e.features?.[0];
+  if (!f) return;
+  console.log(f.properties);
+});
+
+map.on("click", "Noise polygons", (e) => {
   const f = e.features?.[0];
   if (!f) return;
 
-  const v = f.properties?.VALUE;
-  const vRounded = (v ?? NaN);
-  const pretty = Number.isFinite(vRounded) ? vRounded.toFixed(1) : 'N/A';
-
-  new maplibregl.Popup({ closeButton: true, closeOnClick: true })
-    .setLngLat(e.lngLat)
-    .setHTML(`<div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
-                <div style="font-weight:700; margin-bottom:4px;">Noise</div>
-                <div><b>${pretty}</b> dB</div>
-              </div>`)
-    .addTo(map);
+  const value = Number(f.properties?.VALUE);
+  updateLegend(value);
 });
+
+map.on("click", "Noise polygons", (e) => {
+  const f = e.features?.[0];
+  if (!f) return;
+
+  const value = Number(f.properties?.VALUE);
+  updateLegend(value);
+});
+
+// cursor for interactivity
+map.on("mouseenter", "Noise polygons", () => {
+  map.getCanvas().style.cursor = "pointer";
+});
+
+map.on("mouseleave", "Noise polygons", () => {
+  map.getCanvas().style.cursor = "";
+});
+
 // Add basic map controls
 map.addControl(new maplibregl.NavigationControl(), "top-right");
 map.addControl(new maplibregl.FullscreenControl());
@@ -40,12 +121,12 @@ map.addControl(
   new maplibregl.ScaleControl({
     maxWidth: 80,
     unit: "imperial",
-  })
+  }),
 );
 
-map.on("move", () => {
-  const center = map.getCenter();
-  console.log(
-    `Longitude: ${center.lng.toFixed(4)} Latitude: ${center.lat.toFixed(4)}`
-  );
-});
+// map.on("move", () => {
+//   const center = map.getCenter();
+//   console.log(
+//     `Longitude: ${center.lng.toFixed(4)} Latitude: ${center.lat.toFixed(4)}`,
+//   );
+// });
