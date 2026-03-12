@@ -17,6 +17,15 @@
       "minzoom": 6,
       "maxzoom": 17
     },
+    "noise-polygons": {
+      "type": "vector",
+      "tiles": [
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_noise_polygons/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+      ],
+      "tileSize": 512,
+      "minzoom": 11,
+      "maxzoom": 17
+    },
     "khc-cemeteries": {
       "type": "vector",
       "tiles": [
@@ -391,6 +400,18 @@
       "paint": {
         "raster-opacity": 0.8,
         "raster-resampling": "linear"
+      }
+    },
+    {
+      "id": "Noise polygons",
+      "type": "fill",
+      "source": "noise-polygons",
+      "source-layer": "noise_raster_polygons",
+      "minzoom": 11,
+      "maxzoom": 17,
+      "paint": {
+        "fill-color": "#ffffff",
+        "fill-opacity": 0
       }
     },
     {

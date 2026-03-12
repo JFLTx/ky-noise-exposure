@@ -17,60 +17,22 @@ const map = new maplibregl.Map({
   maxZoom: 16,
 });
 
-// map.on("load", () => {
-//   map.addSource("ky-noise", {
-//     type: "raster",
-//     tiles: [
-//       "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_transportation_noise/MapServer/tile/{z}/{y}/{x}",
-//     ],
-//     tileSize: 256,
-//     minzoom: 7,
-//     maxzoom: 16,
-//   });
+map.on('click', 'Noise polygons', (e) => {
+  const f = e.features?.[0];
+  if (!f) return;
 
-//   // put it on top of everything
-//   map.addLayer({
-//     id: "noise",
-//     type: "raster",
-//     source: "ky-noise",
-//     paint: { "raster-opacity": 1 },
-//   });
-//   map.addSource("khc-cemeteries", {
-//     type: "vector",
-//     tiles: [
-//       "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/khc_cemeteries/VectorTileServer/tile/{z}/{y}/{x}.pbf"
-//     ],
-//     minzoom: 11,
-//     maxzoom: 17,
-//     tileSize: 512 // important: your service uses 512 tiles
-//   });
+  const v = f.properties?.VALUE;
+  const vRounded = (v ?? NaN);
+  const pretty = Number.isFinite(vRounded) ? vRounded.toFixed(1) : 'N/A';
 
-//   map.addLayer({
-//     id: "cemetery-fill",
-//     type: "fill",
-//     source: "khc-cemeteries",
-//     "source-layer": CEM_SOURCE_LAYER,
-//     minzoom: 11,
-//     paint: {
-//       "fill-color": "#1A2B1F",
-//       "fill-opacity": 0.6
-//     }
-//   });
-
-//   map.addLayer({
-//     id: "cemetery-outline",
-//     type: "line",
-//     source: "khc-cemeteries",
-//     "source-layer": CEM_SOURCE_LAYER,
-//     minzoom: 11,
-//     paint: {
-//       "line-color": "#4C7A5A",
-//       "line-width": 0.5,
-//       "line-opacity": 0.7
-//     }
-//   });
-// });
-
+  new maplibregl.Popup({ closeButton: true, closeOnClick: true })
+    .setLngLat(e.lngLat)
+    .setHTML(`<div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
+                <div style="font-weight:700; margin-bottom:4px;">Noise</div>
+                <div><b>${pretty}</b> dB</div>
+              </div>`)
+    .addTo(map);
+});
 // Add basic map controls
 map.addControl(new maplibregl.NavigationControl(), "top-right");
 map.addControl(new maplibregl.FullscreenControl());
