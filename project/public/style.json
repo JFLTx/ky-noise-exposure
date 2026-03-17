@@ -522,7 +522,7 @@
       "layout": { "visibility": "visible" },
       "paint": {
         "fill-antialias": true,
-        "fill-color": "#000030",
+        "fill-color": "#04043d",
         "fill-opacity": {
           "base": 1,
           "stops": [
@@ -574,7 +574,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#001c99",
+        "text-color": "#023aab",
         "text-halo-color": "#010a33",
         "text-halo-width": 4,
         "text-halo-blur": 4
@@ -603,7 +603,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#001c99",
+        "text-color": "#023aab",
         "text-halo-color": "#010a33",
         "text-halo-width": 1.5
       },

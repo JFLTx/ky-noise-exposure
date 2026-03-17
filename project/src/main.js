@@ -117,12 +117,6 @@ map.on("mouseleave", "Noise polygons", () => {
 // Add basic map controls
 map.addControl(new maplibregl.NavigationControl(), "top-right");
 map.addControl(new maplibregl.FullscreenControl());
-map.addControl(
-  new maplibregl.ScaleControl({
-    maxWidth: 80,
-    unit: "imperial",
-  }),
-);
 
 // map.on("move", () => {
 //   const center = map.getCenter();
