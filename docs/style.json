@@ -26,15 +26,6 @@
       "minzoom": 11,
       "maxzoom": 17
     },
-    "khc-cemeteries": {
-      "type": "vector",
-      "tiles": [
-        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/khc_cemeteries/VectorTileServer/tile/{z}/{y}/{x}.pbf"
-      ],
-      "tileSize": 512,
-      "minzoom": 11,
-      "maxzoom": 17
-    },
     "ky-parcels": {
       "type": "vector",
       "tiles": [
@@ -75,13 +66,12 @@
       "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Libraries_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
     },
     "ky-mask": {
-      "type": "vector",
-      "tiles": [
-        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_mask/VectorTileServer/tile/{z}/{y}/{x}.pbf"
-      ],
-      "tileSize": 512,
-      "minzoom": 1,
-      "maxzoom": 17
+      "type": "geojson",
+      "data": "./data/ky-erase.geojson"
+    },
+    "park-labels": {
+      "type": "geojson",
+      "data": "./data/park-labels.geojson"
     }
   },
 
@@ -225,18 +215,6 @@
           17,
           0.38
         ]
-      }
-    },
-
-    {
-      "id": "KHC cemeteries fill",
-      "type": "fill",
-      "source": "khc-cemeteries",
-      "source-layer": "KHC Cemeteries",
-      "minzoom": 11,
-      "paint": {
-        "fill-color": "#01662d",
-        "fill-opacity": 1
       }
     },
     {
@@ -468,52 +446,6 @@
       ]
     },
     {
-      "id": "Railway",
-      "type": "line",
-      "source": "maptiler_planet",
-      "source-layer": "transportation",
-      "minzoom": 13,
-      "layout": {
-        "visibility": "visible"
-      },
-      "paint": {
-        "line-color": "#4a464d",
-        "line-width": {
-          "stops": [
-            [13, 0.85],
-            [17, 2]
-          ]
-        }
-      },
-      "filter": ["==", "class", "rail"]
-    },
-    {
-      "id": "Railway hatching",
-      "type": "line",
-      "source": "maptiler_planet",
-      "source-layer": "transportation",
-      "minzoom": 15,
-      "layout": {
-        "visibility": "visible"
-      },
-      "paint": {
-        "line-color": "#4a464d",
-        "line-dasharray": {
-          "stops": [
-            [15, [0.2, 0.8]],
-            [17, [0.2, 1]]
-          ]
-        },
-        "line-width": {
-          "stops": [
-            [15, 2],
-            [17, 6]
-          ]
-        }
-      },
-      "filter": ["==", "class", "rail"]
-    },
-    {
       "id": "Building",
       "type": "fill",
       "source": "maptiler_planet",
@@ -542,6 +474,52 @@
         "raster-opacity": 0.8,
         "raster-resampling": "linear"
       }
+    },
+    {
+      "id": "Railway",
+      "type": "line",
+      "source": "maptiler_planet",
+      "source-layer": "transportation",
+      "minzoom": 12.5,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "#4a464d",
+        "line-width": {
+          "stops": [
+            [13, 0.85],
+            [17, 2]
+          ]
+        }
+      },
+      "filter": ["==", "class", "rail"]
+    },
+    {
+      "id": "Railway hatching",
+      "type": "line",
+      "source": "maptiler_planet",
+      "source-layer": "transportation",
+      "minzoom": 14,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "#4a464d",
+        "line-dasharray": {
+          "stops": [
+            [15, [0.2, 0.8]],
+            [17, [0.2, 1]]
+          ]
+        },
+        "line-width": {
+          "stops": [
+            [15, 2],
+            [17, 6]
+          ]
+        }
+      },
+      "filter": ["==", "class", "rail"]
     },
     {
       "id": "Noise polygons",
@@ -824,6 +802,74 @@
       ]
     },
     {
+      "id": "KY Parks Labels",
+      "type": "symbol",
+      "source": "park-labels",
+      "minzoom": 12.5,
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-font": ["Noto Sans Italic"],
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12,
+          10,
+          14,
+          12,
+          16,
+          14
+        ],
+        "text-anchor": "center",
+        "text-justify": "center",
+        "text-offset": [0, 0],
+        "text-max-width": 10,
+        "text-letter-spacing": 0.03,
+        "visibility": "visible",
+        "text-padding": 4,
+        "text-allow-overlap": false,
+        "text-ignore-placement": false
+      },
+      "paint": {
+        "text-color": "#d9f7df",
+        "text-halo-color": "rgba(0, 0, 20, 0.9)",
+        "text-halo-width": 1.4,
+        "text-halo-blur": 0.6
+      }
+    },
+    {
+      "id": "Industrial Sites Labels",
+      "type": "symbol",
+      "source": "industrial-sites",
+      "minzoom": 12.5,
+      "layout": {
+        "text-field": ["get", "MAPNAME"],
+        "text-font": ["Nunito Semi Bold", "Noto Sans Regular"],
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12,
+          10,
+          14,
+          12,
+          16,
+          14
+        ],
+        "text-anchor": "center",
+        "text-justify": "center",
+        "text-offset": [0, 0],
+        "text-max-width": 12,
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "#feb555",
+        "text-halo-color": "#3b002b",
+        "text-halo-width": 1.5,
+        "text-halo-blur": 0.5
+      }
+    },
+    {
       "id": "Place labels",
       "type": "symbol",
       "source": "maptiler_planet",
@@ -1032,7 +1078,6 @@
       "id": "mask",
       "type": "fill",
       "source": "ky-mask",
-      "source-layer": "KY_erase",
       "minzoom": 1,
       "layout": {
         "visibility": "visible"
@@ -1046,7 +1091,6 @@
       "id": "mask-outline",
       "type": "line",
       "source": "ky-mask",
-      "source-layer": "KY_erase",
       "layout": {
         "visibility": "visible",
         "line-join": "round",

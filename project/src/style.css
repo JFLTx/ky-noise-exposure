@@ -1,5 +1,75 @@
 @import "tailwindcss";
 
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000014;
+  color: whitesmoke;
+  font-size: 18px;
+  z-index: 5000;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-text {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #f5f5f5 0%, #9292a0 66%, #f5f5f5 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+.dot {
+  display: inline-block;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.dot1 {
+  animation-delay: 0s;
+}
+.dot2 {
+  animation-delay: 0.15s;
+}
+.dot3 {
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
 #heatmap-legend {
   position: absolute;
   bottom: 10px;
@@ -38,17 +108,17 @@
   width: 100%;
   background: linear-gradient(
     to right,
-    #000014, /* 0% */ 
-    #140e36, /* 10% */ 
-    #3a0f6f, /* 20% */
-    #641a80, /* 30% */
-    #8b2982, /* 40% */ 
-    #b3637a, /* 50% */ 
-    #dd496a, /* 60% */ 
-    #f76f5c, /* 70% */ 
-    #ff9e6c, /* 80% */ 
-    #ffce91, /* 90% */ 
-    #fdfec0 /* 100% */
+    #000014,
+    /* 0% */ #140e36,
+    /* 10% */ #3a0f6f,
+    /* 20% */ #641a80,
+    /* 30% */ #8b2982,
+    /* 40% */ #b3637a,
+    /* 50% */ #dd496a,
+    /* 60% */ #f76f5c,
+    /* 70% */ #ff9e6c,
+    /* 80% */ #ffce91,
+    /* 90% */ #fdfec0 /* 100% */
   );
   margin-bottom: 4px;
   border-radius: 4px;
@@ -103,4 +173,90 @@
   font-size: 13px;
   color: whitesmoke;
   transition: color 0.2s ease;
+}
+
+/* MapLibre Popup Style */
+.popup .maplibregl-popup-content {
+  background: rgba(20, 14, 54, 0.96);
+  color: #f5f5f5;
+  border: 1px solid #3a0f6f;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 20, 0.45);
+  padding: 12px 14px;
+  min-width: 220px;
+  font-family: system-ui, sans-serif;
+}
+
+.popup .maplibregl-popup-tip {
+  border-top-color: rgba(20, 14, 54, 0.96);
+}
+
+.map-popup-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffce91;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.map-popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.map-popup-row .label {
+  color: #cfcfe6;
+  font-weight: 600;
+}
+
+.map-popup-row .value {
+  color: #f5f5f5;
+  text-align: right;
+}
+
+.map-popup-divider {
+  height: 1px;
+  background: rgba(245, 245, 245, 0.14);
+  margin: 10px 0 8px 0;
+}
+
+.popup .maplibregl-popup-close-button {
+  color: #f5f5f5;
+  font-size: 18px;
+  padding: 4px 8px;
+}
+
+.popup .maplibregl-popup-close-button:hover {
+  background: transparent;
+  color: #ffce91;
+}
+
+/* map controls style override */
+.maplibregl-ctrl-group,
+.maplibregl-ctrl-scale {
+  background: rgba(20, 14, 54, 0.92) !important;
+  color: #f5f5f5 !important;
+  border: 1px solid #3a0f6f !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 20, 0.35) !important;
+}
+
+.maplibregl-ctrl-group button {
+  background: transparent !important;
+}
+
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(96%) sepia(6%) saturate(129%) hue-rotate(201deg)
+    brightness(103%) contrast(92%);
+}
+
+.maplibregl-ctrl-group button:hover .maplibregl-ctrl-icon {
+  filter: invert(85%) sepia(29%) saturate(614%) hue-rotate(327deg)
+    brightness(104%) contrast(103%);
+}
+
+.maplibregl-ctrl-attrib div {
+  display: block;
 }
