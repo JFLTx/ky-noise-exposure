@@ -429,10 +429,7 @@ map.addControl(new maplibregl.FullscreenControl());
 const attrib = new maplibregl.AttributionControl({
   compact: true,
   customAttribution: `
-    <div>Noise estimates: Screened from BTS Mapped data and distance decay</div>
-    <div>Traffic data: KYTC</div>
-    <div>Raster: DOT Bureau of Transportation Statistics</div>
-    <div>Schools, Libraries Industrial Sites
+    <div>KYTC | USDOT Bureau of Transportation Statistics | KYGovMaps Open Data Portal</div>
   `,
 });
 // custom info control group
