@@ -1,5 +1,5 @@
 import maplibregl from "maplibre-gl";
-import "/src/style.css";
+import "./style.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 // loading screen
