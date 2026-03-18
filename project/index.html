@@ -1,39 +1,100 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/sound.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KY Noise Exposure</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/sound.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KY Noise Exposure</title>
-</head>
-
-<body>
-  <!-- loading screen  -->
-  <div id="loading-screen">
-    <div class="loading-text gradient-text">
-      Loading<span class="dot dot1">.</span><span class="dot dot2">.</span><span class="dot dot3">.</span>
+  <body>
+    <!-- Map title -->
+    <h1>Kentucky Transportation Noise Exposure</h1>
+    <!-- loading screen  -->
+    <div id="loading-screen">
+      <div class="loading-text gradient-text">
+        Loading<span class="dot dot1">.</span><span class="dot dot2">.</span
+        ><span class="dot dot3">.</span>
+      </div>
     </div>
-  </div>
-  <div id="map" class="h-screen w-screen"></div>
-  <script type="module" src="./src/main.js"></script>
+    <div id="map" class="h-screen w-screen"></div>
+    <script type="module" src="./src/main.js"></script>
 
-  <!-- heatmap legend -->
-      <div id="heatmap-legend">
-    <div class="legend-title">Noise Levels</div>
+    <div id="info-modal" class="hidden" aria-hidden="true">
+      <div class="info-modal-panel">
+        <button
+          id="info-close"
+          class="info-close"
+          aria-label="Close map information"
+        >
+          ×
+        </button>
 
-    <div class="heat-gradient-wrap">
-      <div class="heat-gradient-bar"></div>
-      <div id="heatmap-indicator"></div>
+        <h2>Map Information</h2>
+
+        <p>
+          This map shows modeled transportation (railway, aviation, and highway) noise, traffic count
+          information, and screening-level distance-based exposure estimates.
+          Noise-sensitive and noise-emitting sites are shown in the map.<br>
+          Noise emitting sites include:
+          <ul class="info-list">
+            <li>Roadways</li>
+            <li>Airports</li>
+            <li>Industrial Sites</li>
+          </ul>
+        </p>
+
+        <p>Noise sensitive sites include:</p>
+        <ul class="info-list">
+          <li>Schools</li>
+          <li>Libraries</li>
+          <li>Parks/Natural Areas</li>
+        </ul>
+        <h3>Transportation Noise Surface</h3>
+        <p>
+          Noise values shown on the map are based on the U.S. Department of
+          Transportation Bureau of Transportation Statistics
+          <a
+            href="https://www.bts.gov/geospatial/national-transportation-noise-map"target="_blank"
+            >National Transportation Noise Map Data</a
+          >, downloaded for the state of Kentucky. Clicking the map at
+          interactive zoom levels updates the legend readout.
+        </p>
+
+        <h3>Traffic Counts</h3>
+        <p>
+          Roadway traffic is a critical environmental noise pollutant. Traffic
+          data shown is derived from KYTC's ArcGIS REST Services
+          <a
+            href="https://maps.kytc.ky.gov/arcgis/rest/services/Apps/TrafficCounts/MapServer"target="_blank"
+            >TrafficCounts</a
+          >. Where available, AADT, single-truck AADT, and combo-truck AADT are
+          shown.
+        </p>
+
+        <h3>Estimated Noise Range</h3>
+        <p>
+          Screening noise ranges in road popups are estimated from the mapped
+          noise value and simple distance-decay assumptions. Distance-decay assumptions are based on 
+          
+        </p>
+      </div>
     </div>
 
-    <div class="heat-gradient-labels">
-      <span>45 dB</span>
-      <span id="heatmap-readout">Click map</span>
-      <span>124 dB</span>
-    </div>
-  </div>
-    </div>
-</body>
+    <!-- heatmap legend -->
+    <div id="heatmap-legend">
+      <div class="legend-title">Noise Levels</div>
 
+      <div class="heat-gradient-wrap">
+        <div class="heat-gradient-bar"></div>
+        <div id="heatmap-indicator"></div>
+      </div>
+
+      <div class="heat-gradient-labels">
+        <span>45 dB</span>
+        <span id="heatmap-readout">Click map</span>
+        <span>124 dB</span>
+      </div>
+    </div>
+  </body>
 </html>

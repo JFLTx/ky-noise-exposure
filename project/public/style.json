@@ -26,10 +26,10 @@
       "minzoom": 11,
       "maxzoom": 17
     },
-    "ky-parcels": {
+    "aadt-exposure-contours": {
       "type": "vector",
       "tiles": [
-        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/ky_parcels/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+        "https://tiles.arcgis.com/tiles/GfBANWpVjDJnX8Qz/arcgis/rest/services/aadt_exposure_contours/VectorTileServer/tile/{z}/{y}/{x}.pbf"
       ],
       "tileSize": 512,
       "minzoom": 11,
@@ -64,6 +64,14 @@
     "libraries": {
       "type": "geojson",
       "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Libraries_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
+    },
+    "airports": {
+      "type": "geojson",
+      "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Airports_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
+    },
+    "airport-runways": {
+      "type": "geojson",
+      "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Airport_Runways_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
     },
     "ky-mask": {
       "type": "geojson",
@@ -165,59 +173,6 @@
       }
     },
     {
-      "id": "KY Parcels Fill",
-      "type": "fill",
-      "source": "ky-parcels",
-      "source-layer": "parcels",
-      "minzoom": 11,
-      "paint": {
-        "fill-color": "#F5F5F5",
-        "fill-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13,
-          0.01,
-          15,
-          0.05,
-          17,
-          0.075
-        ]
-      }
-    },
-    {
-      "id": "KY Parcels Outline",
-      "type": "line",
-      "source": "ky-parcels",
-      "source-layer": "parcels",
-      "minzoom": 11,
-      "paint": {
-        "line-color": "#F5F5F5",
-        "line-width": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13,
-          1,
-          15,
-          1.15,
-          17,
-          1.25
-        ],
-        "line-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13,
-          0.2,
-          15,
-          0.25,
-          17,
-          0.38
-        ]
-      }
-    },
-    {
       "id": "industrial-sites-fill",
       "type": "fill",
       "source": "industrial-sites",
@@ -312,13 +267,75 @@
       }
     },
     {
+      "id": "runway-outline-core",
+      "type": "line",
+      "source": "airport-runways",
+      "minzoom": 10,
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#feb555",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          1.2,
+          11,
+          1.8,
+          14,
+          2.6
+        ],
+        "line-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          0,
+          10.25,
+          0.08,
+          10.5,
+          0.22,
+          10.75,
+          0.5,
+          11,
+          0.8
+        ]
+      }
+    },
+    {
+      "id": "runway-fill",
+      "type": "fill",
+      "source": "airport-runways",
+      "paint": {
+        "fill-color": "#feb555",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10,
+          0,
+          10.25,
+          0.06,
+          10.5,
+          0.14,
+          10.75,
+          0.24,
+          11,
+          0.35
+        ]
+      }
+    },
+    {
       "id": "KY Parks Fill",
       "type": "fill",
       "source": "ky-parks",
       "source-layer": "KY_Parks",
       "minzoom": 11,
       "paint": {
-        "fill-color": "#00cc36",
+        "fill-color": "#05a32f",
         "fill-opacity": [
           "interpolate",
           ["linear"],
@@ -339,7 +356,7 @@
       "source-layer": "KY_Parks",
       "minzoom": 11,
       "paint": {
-        "line-color": "#F5F5F5",
+        "line-color": "#c3c3c3",
         "line-width": [
           "interpolate",
           ["linear"],
@@ -356,11 +373,11 @@
           ["linear"],
           ["zoom"],
           11,
-          1,
+          0.25,
           12,
-          1.5,
+          0.58,
           14,
-          2
+          0.8
         ]
       }
     },
@@ -447,21 +464,35 @@
     },
     {
       "id": "Building",
-      "type": "fill",
+      "type": "fill-extrusion",
       "source": "maptiler_planet",
       "source-layer": "building",
-      "minzoom": 16,
+      "minzoom": 15,
       "layout": { "visibility": "visible" },
       "paint": {
-        "fill-antialias": true,
-        "fill-color": "#04043d",
-        "fill-opacity": {
-          "base": 1,
-          "stops": [
-            [13, 0],
-            [16, 1]
-          ]
-        }
+        "fill-extrusion-color": "#0b0b52",
+        "fill-extrusion-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          15,
+          0,
+          15.5,
+          0.55,
+          16,
+          0.9
+        ],
+        "fill-extrusion-height": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          15,
+          0,
+          16,
+          18
+        ],
+        "fill-extrusion-base": 0,
+        "fill-extrusion-vertical-gradient": true
       }
     },
     {
@@ -522,6 +553,85 @@
       "filter": ["==", "class", "rail"]
     },
     {
+      "id": "AADT Exposure Contours",
+      "type": "line",
+      "source": "aadt-exposure-contours",
+      "source-layer": "AADT_Contours",
+      "minzoom": 11,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "DIST_LABEL"],
+          "100 ft",
+          "#fdfec0",
+          "200 ft",
+          "#ffce91",
+          "300 ft",
+          "#ff9e6c",
+          "400 ft",
+          "#dd496a",
+          "500 ft",
+          "#641a80",
+          "#c5c5c5"
+        ],
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          [
+            "match",
+            ["get", "DIST_LABEL"],
+            "100 ft",
+            1.9,
+            "200 ft",
+            1.7,
+            "300 ft",
+            1.5,
+            "400 ft",
+            1.4,
+            "500 ft",
+            1.25,
+            1.5
+          ],
+          14,
+          [
+            "match",
+            ["get", "DIST_LABEL"],
+            "100 ft",
+            3,
+            "200 ft",
+            2.75,
+            "300 ft",
+            2.5,
+            "400 ft",
+            2.25,
+            "500 ft",
+            2,
+            2.2
+          ]
+        ],
+        "line-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0,
+          12,
+          0.1,
+          13,
+          0.22,
+          14,
+          0.4
+        ]
+      }
+    },
+    {
       "id": "Noise polygons",
       "type": "fill",
       "source": "noise-polygons",
@@ -530,7 +640,7 @@
       "maxzoom": 17,
       "paint": {
         "fill-color": "#F5F5F5",
-        "fill-opacity": 0
+        "fill-opacity": 0.01
       }
     },
     {
@@ -1075,6 +1185,68 @@
       ]
     },
     {
+      "id": "AADT Exposure Contour Labels",
+      "type": "symbol",
+      "source": "aadt-exposure-contours",
+      "source-layer": "AADT_Contours",
+      "minzoom": 12,
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": ["get", "DIST_LABEL"],
+        "text-font": ["Noto Sans Italic"],
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12,
+          10,
+          14,
+          11,
+          16,
+          12
+        ],
+        "symbol-spacing": 500,
+        "text-rotation-alignment": "map",
+        "text-pitch-alignment": "map",
+        "text-keep-upright": true,
+        "text-letter-spacing": 0.04,
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": [
+          "match",
+          ["get", "DIST_LABEL"],
+          "100 ft",
+          "#fdfec0",
+          "200 ft",
+          "#ffce91",
+          "300 ft",
+          "#ff9e6c",
+          "400 ft",
+          "#f3a0b0",
+          "500 ft",
+          "#c7a6e8",
+          "#F5F5F5"
+        ],
+        "text-halo-color": "rgba(0, 0, 20, 0.9)",
+        "text-halo-width": 1.75,
+        "text-halo-blur": 0.7,
+        "text-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          12,
+          0,
+          12.5,
+          0.25,
+          13,
+          0.55,
+          14,
+          0.9
+        ]
+      }
+    },
+    {
       "id": "mask",
       "type": "fill",
       "source": "ky-mask",
@@ -1109,7 +1281,7 @@
       "source": "schools",
       "minzoom": 11,
       "layout": {
-        "icon-image": "/school.svg",
+        "icon-image": "./school.svg",
         "icon-size": [
           "interpolate",
           ["linear"],
@@ -1123,6 +1295,23 @@
         ],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true
+      },
+      "paint": {
+        "icon-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0,
+          11.5,
+          0.2,
+          12,
+          0.45,
+          13,
+          0.75,
+          14,
+          1
+        ]
       }
     },
     {
@@ -1131,7 +1320,7 @@
       "source": "libraries",
       "minzoom": 11,
       "layout": {
-        "icon-image": "/library.svg",
+        "icon-image": "./library.svg",
         "icon-size": [
           "interpolate",
           ["linear"],
@@ -1145,6 +1334,64 @@
         ],
         "icon-allow-overlap": true,
         "icon-ignore-placement": true
+      },
+      "paint": {
+        "icon-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0,
+          11.5,
+          0.2,
+          12,
+          0.45,
+          13,
+          0.75,
+          14,
+          1
+        ]
+      }
+    },
+    {
+      "id": "airports-symbol",
+      "type": "symbol",
+      "source": "airports",
+      "minzoom": 8.5,
+      "layout": {
+        "icon-image": "./airplane.svg",
+        "icon-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          11,
+          0.08,
+          14,
+          0.11,
+          16,
+          0.14
+        ],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true
+      },
+      "paint": {
+        "icon-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8.5,
+          0,
+          9,
+          0.15,
+          10,
+          0.35,
+          11,
+          0.6,
+          12,
+          0.85,
+          13,
+          1
+        ]
       }
     },
     {

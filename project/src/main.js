@@ -5,6 +5,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 // loading screen
 const loadingScreen = document.getElementById("loading-screen");
 
+// initialize maplibre map settings
 const map = new maplibregl.Map({
   container: "map",
   style: "/style.json",
@@ -24,8 +25,102 @@ map.on("idle", () => {
 const min = 45;
 const max = 124;
 
+// set variables to access elements in HTML
 const indicator = document.getElementById("heatmap-indicator");
 const readout = document.getElementById("heatmap-readout");
+const minZoom = 10; // min zoom level for noise polygon interactivity
+
+// custom infocontrol class matching/targeting MapLibre's control group settings
+class InfoControl {
+  onAdd(map) {
+    this._map = map;
+
+    const container = document.createElement("div");
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "maplibregl-ctrl-icon info-control-button";
+    button.setAttribute("aria-label", "Map information");
+    button.setAttribute("title", "Map information");
+    button.innerHTML = "I";
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const modal = document.getElementById("info-modal");
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    });
+
+    container.appendChild(button);
+    this._container = container;
+
+    return container;
+  }
+
+  onRemove() {
+    this._container?.remove();
+    this._map = undefined;
+  }
+}
+
+// info button and modal wiring
+const infoModal = document.getElementById("info-modal");
+const infoClose = document.getElementById("info-close");
+
+infoClose.addEventListener("click", () => {
+  infoModal.classList.add("hidden");
+  infoModal.setAttribute("aria-hidden", "true");
+});
+
+infoModal.addEventListener("click", (e) => {
+  if (e.target === infoModal) {
+    infoModal.classList.add("hidden");
+    infoModal.setAttribute("aria-hidden", "true");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    infoModal.classList.add("hidden");
+    infoModal.setAttribute("aria-hidden", "true");
+  }
+});
+
+map.on("load", () => {
+  indicator.style.opacity = "0";
+  setPrompt();
+});
+
+// Set the prompt from "Zoom to Explore" to "Click Map" when zoomed in
+map.on("zoom", setPrompt);
+
+// Reset from "Click Map"/clicked VALUE to "Zoom to Explore" when zoomed out
+map.on("zoomend", () => {
+  if (map.getZoom() < minZoom) {
+    resetPrompt();
+  } else if (indicator.style.opacity === "0" || !indicator.style.opacity) {
+    setPrompt();
+  }
+});
+
+// set a function on zoom to change heatmap-readout property
+// matches the minZoom value
+// THis clears confusion about map interactivity capabilities
+function setPrompt() {
+  const z = map.getZoom();
+
+  // only change the prompt when no noise value is currently active
+  if (!indicator.style.opacity || indicator.style.opacity === "0") {
+    readout.textContent = z >= minZoom ? "Click Map" : "Zoom to Explore";
+  }
+}
+
+// reset the prompt
+function resetPrompt() {
+  indicator.style.opacity = "0";
+  setPrompt();
+}
 
 // force the clicked noise value to stay in legend range
 // legend range is the min and max values
@@ -68,7 +163,6 @@ function noiseEstimate(baseDb, distanceFt) {
 }
 
 // Calculate range of values based on distance
-//
 function buildRange(baseDb) {
   const distances = [100, 200, 300, 400, 500];
 
@@ -98,6 +192,7 @@ function checkNull(properties, fields) {
     .join("");
 }
 
+// road field names for popup
 const roadFields = [
   { key: "LASTCNT", label: "AADT" },
   { key: "ADTSINGLE", label: "Single Trucks" },
@@ -110,7 +205,12 @@ const loadingImages = new Set();
 map.on("styleimagemissing", async (e) => {
   const id = e.id;
 
-  if (id !== "/school.svg" && id !== "/library.svg") return;
+  if (
+    id !== "./school.svg" &&
+    id !== "./library.svg" &&
+    id !== "./airplane.svg"
+  )
+    return;
   if (map.hasImage(id)) return;
   if (loadingImages.has(id)) return;
 
@@ -176,16 +276,27 @@ map.on("click", (e) => {
     if (noiseFeature) {
       const baseDb = Number(noiseFeature.properties?.VALUE);
       const rows = buildRange(baseDb);
+      const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
 
       noiseHtml = `
         <div class="map-popup-divider"></div>
         <div class="map-popup-title">Estimated Noise Range</div>
-        <div class="map-popup-subtitle">Estimate based on BTS mapped value and distance decay.</div>
+        <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay.</div>
+        ${
+          mappedValue
+            ? `
+              <div class="map-popup-row">
+                <span class="label">BTS mapped value:</span>
+                <span class="value">${mappedValue} dB</span>
+              </div>
+            `
+            : ""
+        }
         ${rows
           .map(
             (r) => `
           <div class="map-popup-row">
-            <span class="label">${r.distance} ft:</span>
+            <span class="label">${r.distance} ft decay:</span>
             <span class="value">${r.soft} - ${r.hard} dB</span>
           </div>
         `,
@@ -267,12 +378,38 @@ map.on("click", "schools-symbol", (e) => {
     .addTo(map);
 });
 
+map.on("click", "airports-symbol", (e) => {
+  const f = e.features?.[0];
+  if (!f) return;
+
+  const name = f.properties?.FacilityNa || "Airport";
+
+  new maplibregl.Popup({
+    closeButton: true,
+    closeOnClick: true,
+    className: "popup",
+  })
+    .setLngLat(e.lngLat)
+    .setHTML(
+      `
+      <div class="map-popup">
+        <div class="map-popup-title">Airport</div>
+        <div class="map-popup-row">
+          <span class="value">${name}</span>
+        </div>
+      </div>
+    `,
+    )
+    .addTo(map);
+});
+
 // cursor for interactivity
 const interactiveLayers = [
   "KYTC Traffic Counts",
   "Noise polygons",
   "libraries-symbol",
   "schools-symbol",
+  "airports-symbol",
 ];
 
 interactiveLayers.forEach((layer) => {
@@ -295,8 +432,11 @@ const attrib = new maplibregl.AttributionControl({
     <div>Noise estimates: Screened from BTS Mapped data and distance decay</div>
     <div>Traffic data: KYTC</div>
     <div>Raster: DOT Bureau of Transportation Statistics</div>
+    <div>Schools, Libraries Industrial Sites
   `,
 });
+// custom info control group
+map.addControl(new InfoControl(), "top-right");
 
 map.addControl(attrib, "bottom-right");
 
