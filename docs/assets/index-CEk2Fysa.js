@@ -854,8 +854,5 @@ ${D.shaderPreludeCode.vertexSource}`,define:D.shaderDefine},defaultProjectionDat
         </div>
       </div>
     `).addTo(yt)});const t_=["KYTC Traffic Counts","Noise polygons","libraries-symbol","schools-symbol","airports-symbol"];t_.forEach($e=>{yt.on("mouseenter",$e,()=>{yt.getCanvas().style.cursor="pointer"}),yt.on("mouseleave",$e,()=>{yt.getCanvas().style.cursor=""})});yt.addControl(new Is.NavigationControl,"top-right");yt.addControl(new Is.FullscreenControl);const i_=new Is.AttributionControl({compact:!0,customAttribution:`
-    <div>Noise estimates: Screened from BTS Mapped data and distance decay</div>
-    <div>Traffic data: KYTC</div>
-    <div>Raster: DOT Bureau of Transportation Statistics</div>
-    <div>Schools, Libraries Industrial Sites
+    <div>KYTC | USDOT Bureau of Transportation Statistics | KYGovMaps Open Data Portal</div>
   `});yt.addControl(new $g,"top-right");yt.addControl(i_,"bottom-right");yt.on("load",()=>{const $e=document.querySelector(".maplibregl-ctrl-attrib");$e&&$e.classList.remove("maplibregl-compact-show")});
