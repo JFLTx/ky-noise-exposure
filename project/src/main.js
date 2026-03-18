@@ -8,7 +8,7 @@ const loadingScreen = document.getElementById("loading-screen");
 // initialize maplibre map settings
 const map = new maplibregl.Map({
   container: "map",
-  style: "/style.json",
+  style: "./style.json",
   center: [-85.5, 37.6],
   zoom: 7,
   minZoom: 6,
