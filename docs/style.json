@@ -1205,7 +1205,7 @@
           16,
           12
         ],
-        "symbol-spacing": 500,
+        "symbol-spacing": 350,
         "text-rotation-alignment": "map",
         "text-pitch-alignment": "map",
         "text-keep-upright": true,

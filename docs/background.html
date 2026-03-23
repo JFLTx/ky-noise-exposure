@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Background</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    body {
+      background: rgba(10, 7, 26, 0.97);
+      color: #f5f5f5;
+      font-family: system-ui, sans-serif;
+      max-width: 900px;
+      margin: auto;
+      padding: 24px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      margin: 0 0 12px 0;
+      color: #ffce91;
+      font-size: 28px;
+      letter-spacing: 0.03em;
+    }
+
+    h2 {
+      color: #ffce91;
+      font-size: 20px;
+    }
+
+    h3 {
+      margin: 20px 0 6px 0;
+      color: #ffce91;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 0 0 12px 0;
+      color: #e6e6f0;
+      font-size: 14px;
+    }
+
+    /* lists */
+    ul {
+      list-style: disc;
+      margin: 8px 0 12px 18px;
+      padding-left: 18px;
+      color: #e6e6f0;
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    li::marker {
+      color: #ffce91;
+    }
+
+    a {
+      color: #ffdaad;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition:
+        color 0.2s ease,
+        text-shadow 0.2s ease;
+    }
+
+    a:hover {
+      color: #f5f5f5;
+      text-shadow: 0 0 6px rgba(255, 206, 145, 0.6);
+    }
+
+    a:active {
+      color: #ff9e6c;
+    }
+
+    /* section divider */
+    hr {
+      border: none;
+      height: 1px;
+      background: rgba(245, 245, 245, 0.12);
+      margin: 20px 0;
+    }
+
+    /* content wrapper to mimic info modal window */
+    .content {
+      background: rgba(20, 14, 54, 0.97);
+      border: 1px solid #3a0f6f;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(0, 0, 20, 0.5);
+      padding: 20px 22px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      h3 {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 18px;
+      }
+    }
+  </style>
+  <body>
+    <div class="content">
+      <h1 style="color: #ffce91">Background</h1>
+      <h2>What this Map Shows</h2>
+      <p>
+        This map visualizes transportation-related noise exposure across
+        Kentucky using national noise data, traffic counts, and distance-based
+        screening estimates. It is designed to help users understand how noise
+        varies across space and how far it may extend from major sources.
+      </p>
+
+      <h2>Why Noise Matters</h2>
+      <p>
+        Enviormnetal noise is more than a nuisance. It is a widespread public
+        health concern. Research shows long-term exposure can contribute to:
+      </p>
+      <ul>
+        <li>Sleep disruption.</li>
+        <li>Stress and reduced quality of life.</li>
+        <li>Cardiovascular disease and stroke.</li>
+      </ul>
+      <p>
+        Despite this, noise is often under-recognized because it is invisible
+        and experienced as a constant background condition rather than a single
+        event.
+      </p>
+
+      <h2>Policy Context</h2>
+      <p>
+        The U.S. once had a coordinated approach to managing environmental
+        noise, but federal oversight declined over time. Today, noise regulation
+        is fragmented across agencies and typically addressed only at the
+        project level (e.g., highway improvement/expansion or airports).
+      </p>
+      <p>This means:</p>
+      <ul>
+        <li>No consistent national monitoring system</li>
+        <li>Limited long-term exposure reduction strategies</li>
+        <li>Reliance on reactive mitigation instead of prevention</li>
+      </ul>
+
+      <h2>Public Health Perspective</h2>
+      <p>
+        Scientific research consistently links chronic noise exposure to
+        measurable health impacts. The EPA recommends keeping long-term exposure
+        below 55 dB, yet many communities exceed this level.
+      </p>
+      <p>
+        Most current policies focus on short-term or project-based noise levels
+        rather than how people actually experience noise over time.
+      </p>
+
+      <h2>Economic & Community Impacts</h2>
+      <p>Noise exposure also carries real economic consequences:</p>
+      <ul>
+        <li>Reduced property values near highways, airports, and industry.</li>
+        <li>Lower productivity and learning outcomes in school-aged youth.</li>
+        <li>Increased healthcare costs.</li>
+        <li>
+          Tax-payer burden on noise mitigation strategies, such as traffic noise
+          barriers.
+        </li>
+      </ul>
+      <p>
+        Even small reductions in noise can lead to billions of dollars in
+        societal benefits.
+      </p>
+
+      <h2>Environmental Justice</h2>
+      <p>
+        Noise exposure is not evenly distributed. Communities near major
+        infrastructure often experience higher noise levels, meaning:
+      </p>
+      <ul>
+        <li>Greater health risks</li>
+        <li>Lower property values</li>
+        <li>Increased cumulative environmental burdens</li>
+      </ul>
+      <p>This makes noise both a public health issue and an equity issue.</p>
+
+      <h2>How This Map Helps</h2>
+      <p>This map supports exploration of noise exposure by:</p>
+      <ul>
+        <li>Showing modeled noise levels from national datasets.</li>
+        <li>Providing traffic-based context.</li>
+        <li>
+          Estimating how noise decreases with distance to identify
+          noise-sensitive features.
+        </li>
+        <li>Highlighting sensitive and emitting land uses.</li>
+      </ul>
+      <p>
+        These estimates are intended for screening and educational purposes, not
+        detailed engineering analysis. It can, however, identify areas or
+        features at risk of noise exposure, and potentially aid in project
+        planning and mitigation strategies.
+      </p>
+
+      <h2>Limitations</h2>
+      <p>
+        Noise estimates shown are simplified based on mapped noise surfaces and
+        generalized distance-decay assumptions. The mapped noise surfaces in
+        this web map combines air, rail, and highway noise into one surface and
+        is a very broad model. Actual noise conditions vary based on terrain,
+        barriers, weather, local conditions, and more.
+      </p>
+
+      <hr />
+
+      <h2>Data & Processing Workflow</h2>
+
+      <p>
+        This map integrates multiple datasets and processing steps to create a
+        unified visualization of transportation noise exposure.
+      </p>
+
+      <h3>Noise Surface</h3>
+      <ul>
+        <li>
+          Source:
+          <a
+            href="https://www.bts.gov/geospatial/national-transportation-noise-map"
+            target="_blank"
+            >BTS National Transportation Noise Map</a
+          >
+        </li>
+        <li>Converted to vector polygons for interactivity</li>
+        <li>Both raster and polygons tiled and hosted on ArcGIS Online</li>
+      </ul>
+
+      <h3>Traffic Data</h3>
+      <ul>
+        <li>
+          Source:
+          <a
+            href="https://maps.kytc.ky.gov/arcgis/rest/services/Apps/TrafficCounts/MapServer/6"
+            target="_blank"
+            >KYTC Traffic Counts</a
+          >
+        </li>
+        <li>Joined with noise polygons using spatial intersection</li>
+        <li>Used for contextual popup information (AADT, trucks)</li>
+        <li>Copied and hosted on personal ArcGIS REST service</li>
+      </ul>
+
+      <h3>Noise-Sensitive & Emitting Sites</h3>
+      <ul>
+        <li>Schools, libraries, airports, and industrial sites</li>
+        <li>
+          Retrieved via
+          <a
+            href="https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services"
+            target="_blank"
+            >kygisserver WGS84WM_Services</a
+          >
+        </li>
+        <li>
+          Parks: combined from &copy; OpenStreetMap contributors, kygisserver,
+          <a
+            href="https://data.lexingtonky.gov/datasets/764044274e974dbba9069d9dab7dcb34_0/explore?location=38.009743%2C-84.438107%2C10"
+            >Fayette</a
+          >
+          &
+          <a
+            href="https://data.lojic.org/datasets/louisville-ky-metro-parks/about"
+            >Jefferson</a
+          >
+          Counties
+        </li>
+      </ul>
+
+      <h3>Distance-Based Noise Estimates</h3>
+      <ul>
+        <li>Calculated dynamically in JavaScript</li>
+        <li>
+          Based on logarithmic
+          <a
+            href="https://environment.transportation.org/focus-areas/noise/noise-overview"
+            target="_blank"
+          >
+            distance-decay assumptions</a
+          >
+        </li>
+        <li>Hard ground: 3.0 dB per doubling of distance</li>
+        <li>Soft ground: 4.5 dB per doubling of distance</li>
+      </ul>
+      <hr />
+      <h2>Technology Stack</h2>
+
+      <h3>GIS & Data Processing</h3>
+      <ul>
+        <li>ArcGIS Pro & QGIS (data processing)</li>
+        <li>ArcGIS Online (vector tile hosting)</li>
+      </ul>
+
+      <h3>Web Mapping</h3>
+      <ul>
+        <li>MapLibre GL JS</li>
+        <li>Custom style.json for basemap and layers</li>
+        <li>Vector tiles and raster services integration</li>
+      </ul>
+
+      <h3>Frontend Development</h3>
+      <ul>
+        <li>JavaScript</li>
+        <li>Vite (build system and bundling)</li>
+        <li>Tailwind CSS + custom CSS</li>
+      </ul>
+
+      <hr />
+      <h3>Additional Sources</h3>
+      <ul>
+        <li>
+          Brandt, Sebastian, and Wolfgang Maennig. “Road Noise Exposure and
+          Residential Property Prices: Evidence from Hamburg.” Transportation
+          Research Part D: Transport and Environment, vol. 16, no. 1, 2011, pp.
+          23–30.
+          <a href="https://doi.org/10.1016/j.trd.2010.07.008" target="_blank"
+            >https://doi.org/10.1016/j.trd.2010.07.008</a
+          >
+        </li>
+        <li>
+          Bronzaft, Arline L. “A Voice to End the Government’s Silence on
+          Noise.” Hearing Rehabilitation Quarterly, vol. 23, no. 1, 1998. Noise
+          Awareness Day.
+          <a
+            href="https://noiseawareness.org/info-center/government-noise-bronzaft/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://noiseawareness.org/info-center/government-noise-bronzaft/</a
+          >.
+        </li>
+        <li>
+          Congress. Noise Control Act of 1972. U.S. Government Publishing
+          Office, 15 Nov. 2021.
+          <a
+            href="https://www.govinfo.gov/content/pkg/COMPS-888/pdf/COMPS-888.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Noise Control Act of 1972</a
+          >.
+        </li>
+        <li>
+          Finegold, Lawrence S., Michiko So Finegold, and George C. Maling Jr.
+          “An Overview of U.S. Noise Policy.” Noise Control Engineering Journal,
+          vol. 51, no. 3, May–June 2003, pp. 131–142.
+          <a
+            href="https://doi.org/10.3397/1.2839706"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://doi.org/10.3397/1.2839706</a
+          >.
+        </li>
+        <li>
+          Hammer, Monica S et al. “Environmental noise pollution in the United
+          States: developing an effective public health response.” Environmental
+          health perspectives vol. 122,2 (2014): 115-9.
+          <a
+            href="https://doi.org/10.1289/ehp.1307272"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://doi.org/10.1289/ehp.1307272</a
+          >.
+        </li>
+        <li>
+          Kentucky Transportation Cabinet. Noise Analysis and Abatement Policy.
+          Kentucky Transportation Cabinet, August 2022.
+          <a
+            href="https://transportation.ky.gov/EnvironmentalAnalysis/Environmental%20Resources/2022%20Revised%20KYTC%20Noise%20Analysis%20and%20Abatement%20Policy%20(7-11-2022)-posted%20-%208-1-2022.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >KYTC August 2022 Revised Noise Abatement Policy</a
+          >.
+        </li>
+        <li>
+          Murphy, Enda, and Eoin A. King. Environmental Noise Pollution: Noise
+          Mapping, Public Health, and Policy. 2nd ed., Elsevier, 2022.
+          <a
+            href="https://doi.org/10.1016/C2019-0-01226-5"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://doi.org/10.1016/C2019-0-01226-5</a
+          >.
+        </li>
+        <li>
+          Swinburn, Tracy K et al. “Valuing Quiet: An Economic Assessment of
+          U.S. Environmental Noise as a Cardiovascular Health Hazard.” American
+          journal of preventive medicine vol. 49,3 (2015): 345-53.
+          <a
+            href="https://doi.org/10.1016/j.amepre.2015.02.016"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://doi.org/10.1016/j.amepre.2015.02.016</a
+          >.
+        </li>
+        <li>
+          Yankoty, Larisa I., et al. “Relationships between Long-term
+          Residential Exposure to Total Environmental Noise and Stroke
+          Incidence.” Noise and Health, vol. 24, no. 113, 2022, pp. 33–39.
+          <a
+            href="https://doi.org/10.4103/nah.nah_34_21"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://doi.org/10.4103/nah.nah_34_21</a
+          >.
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
