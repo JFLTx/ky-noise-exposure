@@ -17,9 +17,31 @@ const map = new maplibregl.Map({
 });
 
 // hide the loading screen once data loads
-map.on("idle", () => {
+// also open the info modal so users know what the map is about
+map.once("idle", () => {
   loadingScreen.classList.add("hidden");
+
+  setTimeout(() => {
+    infoModal.classList.remove("hidden");
+    infoModal.setAttribute("aria-hidden", "false");
+    infoActive = true;
+  }, 300);
 });
+
+// set a zoom function for the map
+function zoomTo() {
+  map.fitBounds(
+    [
+      [-89.57, 36.5], // SW Corner of Kentucky
+      [-81.97, 38.94], // NE Corner of Kentucky Extent
+    ],
+    {
+      padding: 75,
+      duration: 1000,
+      maxZoom: 14,
+    },
+  );
+}
 
 // set variables to min and max noise levels in map
 const min = 45;
@@ -47,9 +69,13 @@ class InfoControl {
 
     button.addEventListener("click", (e) => {
       e.stopPropagation();
-      const modal = document.getElementById("info-modal");
-      modal.classList.remove("hidden");
-      modal.setAttribute("aria-hidden", "false");
+      infoModal.classList.remove("hidden");
+      infoModal.setAttribute("aria-hidden", "false");
+
+      // resume once the info button opens
+      document.querySelectorAll(".info-video").forEach((v) => {
+        v.play();
+      });
     });
 
     container.appendChild(button);
@@ -67,26 +93,56 @@ class InfoControl {
 // info button and modal wiring
 const infoModal = document.getElementById("info-modal");
 const infoClose = document.getElementById("info-close");
+let infoActive = false; // set tracking on whether the info button has been closed after inital map load
 
-infoClose.addEventListener("click", () => {
+// Set a function to the info close
+// Updates the status on infoActive to true (the user has closed the window once
+// zoomTo() only fires if infoActive = true
+function closeInfo() {
   infoModal.classList.add("hidden");
   infoModal.setAttribute("aria-hidden", "true");
-});
+
+  // pause video when info is closed
+  document.querySelectorAll(".info-video").forEach((v) => {
+    v.pause();
+    v.currentTime = 0;
+  });
+
+  if (infoActive) {
+    zoomTo();
+    infoActive = false;
+  }
+}
+
+infoClose.addEventListener("click", closeInfo);
 
 infoModal.addEventListener("click", (e) => {
   if (e.target === infoModal) {
-    infoModal.classList.add("hidden");
-    infoModal.setAttribute("aria-hidden", "true");
+    closeInfo();
   }
 });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
-    infoModal.classList.add("hidden");
-    infoModal.setAttribute("aria-hidden", "true");
+    closeInfo();
   }
 });
 
+// demo video functionality adding full-screen viewing option
+const demoVideo = document.getElementById("demo-video");
+
+if (demoVideo) {
+  demoVideo.addEventListener("click", async () => {
+    try {
+      if (document.fullscreenElement) return;
+      await demoVideo.requestFullscreen();
+    } catch (err) {
+      console.error("Could not enter fullscreen:", err);
+    }
+  });
+}
+
+// noise level indicator is not showing once the map loads
 map.on("load", () => {
   indicator.style.opacity = "0";
   setPrompt();
@@ -254,76 +310,78 @@ map.on("click", (e) => {
     layers: ["KYTC Traffic Counts", "Noise polygons"],
   });
 
-  if (!features.length) return;
-
   const roadFeature = features.find(
     (f) => f.layer.id === "KYTC Traffic Counts",
   );
 
   const noiseFeature = features.find((f) => f.layer.id === "Noise polygons");
 
-  // always let the noise polygon update the legend if present
+  // always let the noise polygon update the legend if data is present
   if (noiseFeature) {
     const value = Number(noiseFeature.properties?.VALUE);
     updateLegend(value);
+  } else {
+    indicator.style.opacity = "0";
+    readout.textContent = "No Noise Data"; // handle no data for user click
   }
+
+  // if no road was clicked, stop here
+  if (!roadFeature) return;
 
   // roads popup
-  if (roadFeature) {
-    const p = roadFeature.properties;
+  const p = roadFeature.properties;
 
-    let noiseHtml = "";
-    if (noiseFeature) {
-      const baseDb = Number(noiseFeature.properties?.VALUE);
-      const rows = buildRange(baseDb);
-      const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
+  let noiseHtml = "";
+  if (noiseFeature) {
+    const baseDb = Number(noiseFeature.properties?.VALUE);
+    const rows = buildRange(baseDb);
+    const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
 
-      noiseHtml = `
-        <div class="map-popup-divider"></div>
-        <div class="map-popup-title">Estimated Noise Range</div>
-        <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay.</div>
-        ${
-          mappedValue
-            ? `
-              <div class="map-popup-row">
-                <span class="label">BTS mapped value:</span>
-                <span class="value">${mappedValue} dB</span>
-              </div>
-            `
-            : ""
-        }
-        ${rows
-          .map(
-            (r) => `
-          <div class="map-popup-row">
-            <span class="label">${r.distance} ft decay:</span>
-            <span class="value">${r.soft} - ${r.hard} dB</span>
-          </div>
-        `,
-          )
-          .join("")}
-      `;
-    }
-
-    const propertyRows = checkNull(p, roadFields);
-
-    new maplibregl.Popup({
-      closeButton: true,
-      closeOnClick: true,
-      className: "popup",
-    })
-      .setLngLat(e.lngLat)
-      .setHTML(
-        `
-          <div class="map-popup">
-            <div class="map-popup-title">Traffic Counts</div>
-            ${propertyRows}
-            ${noiseHtml}
-          </div>
-        `,
-      )
-      .addTo(map);
+    noiseHtml = `
+      <div class="map-popup-divider"></div>
+      <div class="map-popup-title">Estimated Noise Range</div>
+      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay.</div>
+      ${
+        mappedValue
+          ? `
+            <div class="map-popup-row">
+              <span class="label">BTS mapped value:</span>
+              <span class="value">${mappedValue} dB</span>
+            </div>
+          `
+          : ""
+      }
+      ${rows
+        .map(
+          (r) => `
+        <div class="map-popup-row">
+          <span class="label">${r.distance} ft decay:</span>
+          <span class="value">${r.soft} - ${r.hard} dB</span>
+        </div>
+      `,
+        )
+        .join("")}
+    `;
   }
+
+  const propertyRows = checkNull(p, roadFields);
+
+  new maplibregl.Popup({
+    closeButton: true,
+    closeOnClick: true,
+    className: "popup",
+  })
+    .setLngLat(e.lngLat)
+    .setHTML(
+      `
+      <div class="map-popup">
+        <div class="map-popup-title">Traffic Counts</div>
+        ${propertyRows}
+        ${noiseHtml}
+      </div>
+    `,
+    )
+    .addTo(map);
 });
 
 // popup for libraries

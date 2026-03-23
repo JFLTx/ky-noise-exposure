@@ -18,7 +18,6 @@
       </div>
     </div>
     <div id="map" class="h-screen w-screen"></div>
-    <script type="module" src="./src/main.js"></script>
 
     <div id="info-modal" class="hidden" aria-hidden="true">
       <div class="info-modal-panel">
@@ -32,20 +31,47 @@
 
         <h2>Map Information</h2>
 
+        <h3>How to Use This Map</h3>
         <p>
-          This map shows modeled transportation (railway, aviation, and highway) noise, traffic count
-          information, and screening-level distance-based exposure estimates.
-          Noise-sensitive and noise-emitting sites are shown in the map.<br>
-          Noise emitting sites include:
-          <ul class="info-list">
-            <li>Roadways</li>
-            <li>Airports</li>
-            <li>Industrial Sites</li>
-          </ul>
+          Click roads to view traffic counts and estimated noise exposure. Click
+          the map to explore noise levels.
         </p>
 
-        <p>Noise sensitive sites include:</p>
+        <figure class="info-media">
+          <video
+            id="demo-video"
+            class="info-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+          >
+            <source src="./demo.mp4" type="video/mp4" />
+          </video>
+
+          <figcaption class="info-caption">
+            Click the video to expand.
+          </figcaption>
+        </figure>
+
+        <p>
+          This map shows modeled transportation (railway, aviation, and highway)
+          noise, traffic count information, and screening-level distance-based
+          exposure estimates. Noise-sensitive and noise-emitting sites are shown
+          in the map.<br />
+          Noise emitting features include:
+        </p>
         <ul class="info-list">
+          <li>Roadways</li>
+          <li>Airports</li>
+          <li>Railway</li>
+          <li>Industrial Sites</li>
+        </ul>
+
+        <p>Noise sensitive features include:</p>
+        <ul class="info-list">
+          <li>Residential Homes/Areas</li>
           <li>Schools</li>
           <li>Libraries</li>
           <li>Parks/Natural Areas</li>
@@ -56,7 +82,9 @@
           Noise values shown on the map are based on the U.S. Department of
           Transportation Bureau of Transportation Statistics
           <a
-            href="https://www.bts.gov/geospatial/national-transportation-noise-map"target="_blank"
+            href="https://www.bts.gov/geospatial/national-transportation-noise-map"
+            target="_blank"
+            rel="noopener noreferrer"
             >National Transportation Noise Map Data</a
           >, downloaded for the state of Kentucky. Clicking the map at
           interactive zoom levels updates the legend readout.
@@ -67,7 +95,9 @@
           Roadway traffic is a critical environmental noise pollutant. Traffic
           data shown is derived from KYTC's ArcGIS REST Services
           <a
-            href="https://maps.kytc.ky.gov/arcgis/rest/services/Apps/TrafficCounts/MapServer"target="_blank"
+            href="https://maps.kytc.ky.gov/arcgis/rest/services/Apps/TrafficCounts/MapServer"
+            target="_blank"
+            rel="noopener noreferrer"
             >TrafficCounts</a
           >. Where available, AADT, single-truck AADT, and combo-truck AADT are
           shown.
@@ -75,17 +105,60 @@
 
         <h3>Estimated Noise Range</h3>
         <p>
-          Noise ranges in road popups are estimated from the mapped
-          noise value and simple distance-decay assumptions. <a href="https://environment.transportation.org/focus-areas/noise/noise-overview"target="_blank">
-          Distance-decay assumptions</a> are based 
-          on decay rates for hard ground (3.0 dB per doubling of distance) versus soft ground 
-          (4.5 dB per doubling of distance). 
+          Noise ranges in road popups are estimated from the mapped noise value
+          and simple distance-decay assumptions.
+          <a
+            href="https://environment.transportation.org/focus-areas/noise/noise-overview"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Distance-decay assumptions</a
+          >
+          are based on decay rates for hard ground (3.0 dB per doubling of
+          distance) versus soft ground (4.5 dB per doubling of distance).
         </p>
-        
+
+        <p>
+          Distance decay assumptions are assumptions only and may not match with
+          the noise surface. For actual noise, measurements must be manually
+          collected and analyzed for verification.
+        </p>
+
         <h3>More Information</h3>
         <p>
-          For more information, please read further here: [broken link]
+          For more information, please read further here:
+          <a href="./background.html" target="_blank">Background</a>
         </p>
+
+        <footer class="info-footer">
+          <div class="footer-content">
+            <span
+              >Author:
+              <a
+                href="https://www.linkedin.com/in/james-thompson-406800159/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >James FL Thompson</a
+              ></span
+            >
+            <span
+              ><a
+                href="https://github.com/JFLTx/ky-noise-exposure"
+                target="_blank"
+                rel="noopener noreferrer"
+                >KY Transportation Noise Exposure</a
+              ></span
+            >
+            <span
+              ><a
+                href="https://newmapsplus.as.uky.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >NewMapsPlus</a
+              ></span
+            >
+          </div>
+        </footer>
       </div>
     </div>
 
@@ -105,4 +178,7 @@
       </div>
     </div>
   </body>
+
+  <!-- external JS -->
+  <script type="module" src="./src/main.js"></script>
 </html>
