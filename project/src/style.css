@@ -159,6 +159,19 @@ h1 {
   font-size: 14px;
 }
 
+.info-disclaimer {
+  margin-top: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #cfcfe6;
+  background: rgba(20, 14, 54, 0.55);
+  border-left: 3px solid #ffce91;
+  border-radius: 6px;
+  font-style: italic;
+  box-shadow: 0 2px 12px rgba(0, 0, 20, 0.5);
+}
+
 .info-footer {
   margin-top: 18px;
   padding-top: 12px;

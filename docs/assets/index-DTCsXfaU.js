@@ -813,7 +813,7 @@ ${D.shaderPreludeCode.vertexSource}`,define:D.shaderDefine},defaultProjectionDat
       `:""}).join("")}const n_=[{key:"LASTCNT",label:"AADT"},{key:"ADTSINGLE",label:"Single Trucks"},{key:"ADTCOMBO",label:"Combo Trucks"}],ed=new Set;gt.on("styleimagemissing",async Ue=>{const Je=Ue.id;if(!(Je!=="./school.svg"&&Je!=="./library.svg"&&Je!=="./airplane.svg")&&!gt.hasImage(Je)&&!ed.has(Je)){ed.add(Je);try{const et=await fetch(Je);if(!et.ok)throw new Error(`Failed to fetch ${Je}`);const rt=await et.text(),At="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(rt),Vt=new Image;Vt.crossOrigin="anonymous",await new Promise((k,c)=>{Vt.onload=k,Vt.onerror=c,Vt.src=At}),gt.hasImage(Je)||gt.addImage(Je,Vt),gt.triggerRepaint()}catch(et){console.error(`Error loading icon ${Je}:`,et)}finally{ed.delete(Je)}}});gt.on("click",Ue=>{const Je=gt.queryRenderedFeatures(Ue.point,{layers:["KYTC Traffic Counts","Noise polygons"]}),et=Je.find(c=>c.layer.id==="KYTC Traffic Counts"),rt=Je.find(c=>c.layer.id==="Noise polygons");if(rt){const c=Number(rt.properties?.VALUE);e_(c)}else On.style.opacity="0",id.textContent="No Noise Data";if(!et)return;const At=et.properties;let Vt="";if(rt){const c=Number(rt.properties?.VALUE),Ee=i_(c),Hi=Number.isFinite(c)?c.toFixed(1):null;Vt=`
       <div class="map-popup-divider"></div>
       <div class="map-popup-title">Estimated Noise Range</div>
-      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay.</div>
+      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay. Estimates may greatly vary from clicked mapped values.</div>
       ${Hi?`
             <div class="map-popup-row">
               <span class="label">BTS mapped value:</span>

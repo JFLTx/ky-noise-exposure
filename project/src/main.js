@@ -340,7 +340,7 @@ map.on("click", (e) => {
     noiseHtml = `
       <div class="map-popup-divider"></div>
       <div class="map-popup-title">Estimated Noise Range</div>
-      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay.</div>
+      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay. Estimates may greatly vary from clicked mapped values.</div>
       ${
         mappedValue
           ? `
