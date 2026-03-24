@@ -226,8 +226,9 @@ h1 {
 }
 
 .info-close:hover {
-  background: rgba(58, 15, 111, 0.65);
-  color: #ffce91;
+  color: #f5f5f5;
+  background: rgba(58, 15, 111, 0.9);
+  text-shadow: 0 0 6px rgba(255, 206, 145, 0.6);
 }
 
 .info-list {
@@ -470,6 +471,29 @@ h1 {
     max-width: 85vw;
     white-space: normal;
   }
+
+  .info-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    gap: 8px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .footer-content span {
+    display: block;
+  }
+
+  .info-footer a {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 480px) and (orientation: portrait) {
@@ -480,5 +504,17 @@ h1 {
     left: 10px;
     max-width: 75vw;
     white-space: normal;
+  }
+
+  .info-footer {
+    font-size: 11px;
+  }
+
+  .footer-content {
+    gap: 4px;
+  }
+
+  .info-footer a {
+    overflow-wrap: anywhere;
   }
 }

@@ -85,11 +85,43 @@
 
     /* content wrapper to mimic info modal window */
     .content {
+      position: relative;
       background: rgba(20, 14, 54, 0.97);
       border: 1px solid #3a0f6f;
       border-radius: 12px;
       box-shadow: 0 8px 28px rgba(0, 0, 20, 0.5);
       padding: 20px 22px;
+    }
+
+    .back-button-row {
+      position: sticky;
+      top: 16px;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-end;
+      /* margin-bottom: 12px; */
+      pointer-events: none;
+    }
+
+    .back-button {
+      pointer-events: auto;
+      display: inline-block;
+      background: rgba(20, 14, 54, 0.95);
+      color: #ffce91;
+      border: 1px solid #3a0f6f;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 5px 12px rgba(0, 0, 20, 0.8);
+      transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+      color: #f5f5f5;
+      background: rgba(58, 15, 111, 0.9);
+      text-shadow: 0 0 6px rgba(255, 206, 145, 0.6);
     }
 
     @media (max-width: 768px) {
@@ -114,10 +146,25 @@
       h1 {
         font-size: 18px;
       }
+
+      .back-button {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .content {
+        padding: 50px 16px 16px 16px;
+      }
     }
   </style>
   <body>
     <div class="content">
+      <!-- button to return back to web map -->
+      <div class="back-button-row">
+        <a href="./" class="back-button">Back to Map</a>
+      </div>
+
+      <!-- Main Background information -->
       <h1 style="color: #ffce91">Background</h1>
       <h2>What this Map Shows</h2>
       <p>
@@ -202,7 +249,7 @@
         <li>Showing modeled noise levels from national datasets.</li>
         <li>Providing traffic-based context.</li>
         <li>
-          Estimating how noise decreases with distance to identify
+          Estimating how noise decreases with distance to identify potentially
           noise-sensitive features.
         </li>
         <li>Highlighting sensitive and emitting land uses.</li>

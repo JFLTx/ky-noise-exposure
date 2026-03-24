@@ -65,7 +65,7 @@ class InfoControl {
     button.className = "maplibregl-ctrl-icon info-control-button";
     button.setAttribute("aria-label", "Map information");
     button.setAttribute("title", "Map information");
-    button.innerHTML = "I";
+    button.innerHTML = "?";
 
     button.addEventListener("click", (e) => {
       e.stopPropagation();
