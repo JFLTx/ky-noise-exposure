@@ -46,6 +46,7 @@ function zoomTo() {
 // set variables to min and max noise levels in map
 const min = 45;
 const max = 124;
+const warningVal = 55; // value for EPA standard,
 
 // set variables to access elements in HTML
 const indicator = document.getElementById("heatmap-indicator");
@@ -175,6 +176,8 @@ function setPrompt() {
 // reset the prompt
 function resetPrompt() {
   indicator.style.opacity = "0";
+  readout.classList.remove("warning-level");
+  indicator.classList.remove("warning-level");
   setPrompt();
 }
 
@@ -199,6 +202,9 @@ function updateLegend(value) {
   indicator.style.opacity = "1";
 
   readout.textContent = `${pretty} dB`;
+
+  readout.classList.toggle("warning-level", warning(clamped));
+  indicator.classList.toggle("warning-level", warning(clamped));
 }
 
 // Functions to determine noise values as a screening tool
@@ -230,6 +236,16 @@ function buildRange(baseDb) {
       soft: est.soft.toFixed(1),
     };
   });
+}
+
+// helper function to show warning levels in a different style
+// gives the user a visual reference to see what is "bad" per EPA standards
+function warning(value) {
+  return Number.isFinite(value) && value >= warningVal;
+}
+
+function noiseVal(value) {
+  return warning(value) ? "value warning-level" : "value";
 }
 
 // function to check null values for popups
@@ -323,6 +339,8 @@ map.on("click", (e) => {
   } else {
     indicator.style.opacity = "0";
     readout.textContent = "No Noise Data"; // handle no data for user click
+    readout.classList.remove("warning-level");
+    indicator.classList.remove("warning-level");
   }
 
   // if no road was clicked, stop here
@@ -346,7 +364,7 @@ map.on("click", (e) => {
           ? `
             <div class="map-popup-row">
               <span class="label">BTS mapped value:</span>
-              <span class="value">${mappedValue} dB</span>
+              <span class="${noiseVal(baseDb)}">${mappedValue} dB</span>
             </div>
           `
           : ""
@@ -356,7 +374,14 @@ map.on("click", (e) => {
           (r) => `
         <div class="map-popup-row">
           <span class="label">${r.distance} ft decay:</span>
-          <span class="value">${r.soft} - ${r.hard} dB</span>
+          <span class="${
+            warning(Number(r.soft)) ||
+            warning(Number(r.hard))
+              ? "value warning-level"
+              : "value"
+          }">
+  ${r.soft} - ${r.hard} dB
+</span>
         </div>
       `,
         )

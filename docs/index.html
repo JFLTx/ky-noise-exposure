@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="./sound.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KY Noise Exposure</title>
-    <script type="module" crossorigin src="./assets/index-DTCsXfaU.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C254W12I.css">
+    <script type="module" crossorigin src="./assets/index-_6HJwcnc.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Bv4S-Bku.css">
   </head>
 
   <body>
@@ -46,6 +46,7 @@
             Dynamically calculates noise distance decay estimates (roadways
             only).
           </li>
+          <li>Displays noise levels that <span class="warning-level">meet or exceed EPA standards</span> of <span class="warning-level">55.0 dB.</span></li>
         </ul>
 
         <figure class="info-media">
@@ -71,7 +72,7 @@
           noise, traffic count information, and screening-level distance-based
           exposure estimates. Noise-sensitive and noise-emitting sites are shown
           in the map.<br />
-          Noise emitting features include:
+          Noise-emitting features include:
         </p>
         <ul class="info-list">
           <li>Roadways</li>
@@ -80,7 +81,7 @@
           <li>Industrial Sites</li>
         </ul>
 
-        <p>Noise sensitive features include:</p>
+        <p>Noise-sensitive features include:</p>
         <ul class="info-list">
           <li>Residential Homes/Areas</li>
           <li>Schools</li>
@@ -182,6 +183,7 @@
 
       <div class="heat-gradient-wrap">
         <div class="heat-gradient-bar"></div>
+        <div class="heat-warning-level" aria-hidden="true"></div>
         <div id="heatmap-indicator"></div>
       </div>
 
