@@ -124,6 +124,47 @@
       text-shadow: 0 0 6px rgba(255, 206, 145, 0.6);
     }
 
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 16px 0;
+      font-size: 14px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 12px rgba(0, 0, 20, 0.8);
+      text-align: center;
+    }
+
+    .table th,
+    .table td {
+      padding: 10px;
+      border: 1px solid rgba(58, 15, 111, 0.45);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      color: #ffce91;
+      background: rgba(58, 15, 111, 0.38);
+    }
+
+    /* rules applying to second columns in btoh he table headers and cells */
+    .table td:nth-child(2),
+    .table th:nth-child(2) {
+      text-align: center;
+      font-weight: 700;
+      width: 90px;
+    }
+
+    .table caption {
+      caption-side: top;
+      text-align: center;
+      color: #f5f5f5;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 16px;
@@ -155,6 +196,10 @@
       .content {
         padding: 50px 16px 16px 16px;
       }
+
+      .table {
+        font-size: 13px;
+      }
     }
   </style>
   <body>
@@ -165,7 +210,7 @@
       </div>
 
       <!-- Main Background information -->
-      <h1 style="color: #ffce91">Background</h1>
+      <h1>Background</h1>
       <p>
         This project was developed as a graduate-level capstone to explore
         transportation-related noise exposure across Kentucky and to demonstrate
@@ -196,6 +241,136 @@
         and experienced as a constant background condition rather than a single
         event.
       </p>
+
+      <table class="table">
+        <caption>
+          Indoor and Outdoor Sound Levels
+        </caption>
+        <thead>
+          <tr>
+            <th>Outdoor Sound Levels</th>
+            <th>Sound Level<br />(dBA)</th>
+            <th>Indoor Sound Levels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td>110</td>
+            <td>Rock Band at 5 m (16 feet)</td>
+          </tr>
+          <tr>
+            <td>Jet Over–Flight at 300 m (1,000 feet)</td>
+            <td>105</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>100</td>
+            <td>Inside New York Subway Train</td>
+          </tr>
+          <tr>
+            <td>Gas Lawn Mower at 1 m (3 feet)</td>
+            <td>95</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>90</td>
+            <td>Food Blender at 1 m (3 feet)</td>
+          </tr>
+          <tr>
+            <td>Diesel Truck at 15 m (50 feet)</td>
+            <td>85</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Noisy Urban Area-Daytime</td>
+            <td>80</td>
+            <td>Garbage Disposal at 1 m (3 feet)</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>75</td>
+            <td>Shouting at 1 m (3 feet)</td>
+          </tr>
+          <tr>
+            <td>Gas Lawn Mower at 30 m (100 feet)</td>
+            <td>70</td>
+            <td>Vacuum Cleaner at 3 m (10 feet)</td>
+          </tr>
+          <tr>
+            <td>Suburban Commercial Area</td>
+            <td>65</td>
+            <td>Normal Speech at 1 m (3 feet)</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>60</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Quiet Urban Area-Daytime</td>
+            <td>55</td>
+            <td>Quiet Conversation at 1 m (3 feet)</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>50</td>
+            <td>Dishwasher in Next Room</td>
+          </tr>
+          <tr>
+            <td>Quiet Urban Area at Night</td>
+            <td>45</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>40</td>
+            <td>Empty Theater or Library</td>
+          </tr>
+          <tr>
+            <td>Quiet Suburb at Night</td>
+            <td>35</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>30</td>
+            <td>Quiet Bedroom at Night</td>
+          </tr>
+          <tr>
+            <td>Quiet Rural Area at Night</td>
+            <td>25</td>
+            <td>Empty Concert Hall</td>
+          </tr>
+          <tr>
+            <td>Rustling Leaves</td>
+            <td>20</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>15</td>
+            <td>Broadcast and Recording Studios</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>10</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>5</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Reference Pressure Level</td>
+            <td>0</td>
+            <td>Threshold of Hearing</td>
+          </tr>
+        </tbody>
+      </table>
 
       <h2>Policy Context</h2>
       <p>
@@ -397,7 +572,7 @@
           23–30.
           <a href="https://doi.org/10.1016/j.trd.2010.07.008" target="_blank"
             >https://doi.org/10.1016/j.trd.2010.07.008</a
-          >
+          >.
         </li>
         <li>
           Bronzaft, Arline L. “A Voice to End the Government’s Silence on
@@ -408,6 +583,16 @@
             target="_blank"
             rel="noopener noreferrer"
             >https://noiseawareness.org/info-center/government-noise-bronzaft/</a
+          >.
+        </li>
+        <li>
+          Center for Environmental Excellence by AASHTO. “Noise Overview.”
+          <a
+            href="https://environment.transportation.org/focus-areas/noise/noise-overview"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://environment.transportation.org/focus-areas/noise/noise-overview</a
           >.
         </li>
         <li>
@@ -474,14 +659,9 @@
           >.
         </li>
         <li>
-          Center for Environmental Excellence by AASHTO. “Noise Overview.”
-          <a
-            href="https://environment.transportation.org/focus-areas/noise/noise-overview"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            https://environment.transportation.org/focus-areas/noise/noise-overview </a
-          >.
+          United States Environmental Protection Agency. Information on Levels
+          of Environmental Noise Requisite to Protect Public Health and Welfare
+          with an Adequate Margin of Safety. 1974.
         </li>
         <li>
           Yankoty, Larisa I., et al. “Relationships between Long-term
