@@ -79,7 +79,7 @@ h1 {
   padding: 6px 10px;
   font-family: Roboto, sans-serif;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: 0.04em;
   color: #ffce91;
   background: rgba(20, 14, 54, 0.65);
@@ -144,12 +144,15 @@ h1 {
   margin: 0 0 12px 0;
   color: #ffce91;
   font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .info-modal-panel h3 {
   margin: 18px 0 6px 0;
   color: #ffce91;
   font-size: 15px;
+  font-weight: 700
 }
 
 .info-modal-panel p {
@@ -279,6 +282,23 @@ h1 {
 
 .info-modal-panel a:active {
   color: #ff9e6c;
+}
+
+.info-definitions {
+  margin: 8px 0 14px 0;
+}
+
+.info-definitions dt {
+  margin-top: 10px;
+  color: #ffce91;
+  font-size: 14px;
+}
+
+.info-definitions dd {
+  margin: 4px 0 0 0;
+  color: #e6e6f0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* Heatmap Legend */
