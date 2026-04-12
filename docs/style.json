@@ -73,6 +73,10 @@
       "type": "geojson",
       "data": "https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services/Ky_Airport_Runways_WGS84WM/MapServer/0/query?where=1%3D1&outFields=*&f=geojson"
     },
+    "APP-census-tracts": {
+      "type": "geojson",
+      "data": "https://services5.arcgis.com/GfBANWpVjDJnX8Qz/arcgis/rest/services/KY_APP_CensusTracts_2020/FeatureServer/14/query?where=1%3D1&outFields=Tract_FIPS,Pop2020,Sq_Miles,NoiseSensitive_SqMiles,NoiseSensitive_Residence_Count&f=geojson"
+    },
     "ky-mask": {
       "type": "geojson",
       "data": "./data/ky-erase.geojson"
@@ -267,7 +271,7 @@
       }
     },
     {
-      "id": "runway-outline-core",
+      "id": "runway-outline",
       "type": "line",
       "source": "airport-runways",
       "minzoom": 10,
@@ -463,6 +467,251 @@
       ]
     },
     {
+      "id": "APP Census Tracts Fill",
+      "type": "fill",
+      "source": "APP-census-tracts",
+      "minzoom": 8,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "fill-color": [
+          "case",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            10
+          ],
+          "#FFCE91",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            25
+          ],
+          "#FFCE91",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            50
+          ],
+          "#FF9E6C",
+          "#DD496A"
+        ],
+        "fill-opacity": [
+          "case",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            10
+          ],
+          0.075,
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            25
+          ],
+          0.18,
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            50
+          ],
+          0.26,
+          0.32
+        ]
+      }
+    },
+    {
+      "id": "APP Census Tracts Outline",
+      "type": "line",
+      "source": "APP-census-tracts",
+      "minzoom": 8,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": [
+          "case",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            10
+          ],
+          "#FFCE91",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            25
+          ],
+          "#FFCE91",
+          [
+            "<",
+            [
+              "*",
+              [
+                "/",
+                [
+                  "coalesce",
+                  ["to-number", ["get", "NoiseSensitive_SqMiles"]],
+                  0
+                ],
+                [
+                  "max",
+                  ["coalesce", ["to-number", ["get", "Sq_Miles"]], 0],
+                  0.000001
+                ]
+              ],
+              100
+            ],
+            50
+          ],
+          "#FF9E6C",
+          "#DD496A"
+        ],
+        "line-opacity": 0.75,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8,
+          0.5,
+          11,
+          1.1,
+          14,
+          1.8
+        ],
+        "line-dasharray": [2, 2]
+      }
+    },
+    {
       "id": "Building",
       "type": "fill-extrusion",
       "source": "maptiler_planet",
@@ -639,7 +888,7 @@
       "minzoom": 10,
       "maxzoom": 17,
       "paint": {
-        "fill-color": "#F5F5F5",
+        "fill-color": "#000000",
         "fill-opacity": 0.01
       }
     },
