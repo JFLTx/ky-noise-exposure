@@ -17,6 +17,7 @@ The goal is to support exploratory analysis of potential noise exposure, particu
 - Zoom in to explore the map at finer detail. 
 - Click on roadways to view traffic counts and estimated noise exposure. 
 - Click the map to view modeled noise values.
+- Toggle layers on and off in the layers list.
 
 ## Important Note
 
@@ -29,6 +30,8 @@ These values are intended to help identify potentially noise-exposed areas and s
 - Traffic Counts → [KYTC ArcGIS REST Services](https://maps.kytc.ky.gov/arcgis/rest/services/Apps/TrafficCounts/MapServer/6)
 - Schools, Libraries, Airports, Industrial Sites → [kygisserver WGS84WM_Services](https://kygisserver.ky.gov/arcgis/rest/services/WGS84WM_Services)
 - Compiled Parks → &copy; OpenStreetMap contributors, [LFUCG](https://data.lexingtonky.gov/datasets/764044274e974dbba9069d9dab7dcb34_0) and [LOJIC](https://data.lojic.org/datasets/louisville-ky-metro-parks/about)
+- Areas of Persistent Poverty (APP) → [USDOT Areas of Persistent Poverty](https://www.transportation.gov/grants/mpdg-areas-persistent-poverty)
+- Parcel information → [LFUCG](https://data.lexingtonky.gov/datasets/lfucg::parcel/explore?location=38.028076%2C-84.471932%2C10), [LOJIC](https://data.lojic.org/datasets/47085b87ac754d60942ea324a3b0f54f_1/explore), and [landrecords.us](https://www.kaggle.com/datasets/landrecordsus/us-parcel-layer)
 
 ## Methodolgy
 
