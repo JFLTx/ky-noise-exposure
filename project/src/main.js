@@ -53,6 +53,15 @@ const indicator = document.getElementById("heatmap-indicator");
 const readout = document.getElementById("heatmap-readout");
 const minZoom = 10; // min zoom level for noise polygon interactivity
 
+// hoverPopup for our SVG symbols
+// differentiated from a click logic
+const hoverPopup = new maplibregl.Popup({
+  closeButton: false,
+  closeOnClick: false,
+  className: "popup",
+  offset: 12,
+});
+
 // custom infocontrol class matching/targeting MapLibre's control group settings
 class InfoControl {
   onAdd(map) {
@@ -82,6 +91,262 @@ class InfoControl {
     container.appendChild(button);
     this._container = container;
 
+    return container;
+  }
+
+  onRemove() {
+    this._container?.remove();
+    this._map = undefined;
+  }
+}
+
+// legend and layer control in a button similar to the info control
+// all of the legend details and details will be added here
+class LayerControl {
+  onAdd(map) {
+    this._map = map;
+
+    const container = document.createElement("div");
+    container.className = "maplibregl-ctrl maplibregl-ctrl-group layer-control";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "maplibregl-ctrl-icon layer-control-button";
+    button.setAttribute("aria-label", "Layer list");
+    button.setAttribute("title", "Layer list");
+    button.innerHTML = "☰";
+
+    const panel = document.createElement("div");
+    panel.className = "layer-panel hidden";
+
+    panel.innerHTML = `
+      <div class="layer-panel-title">Layers</div>
+      <div class="layer-list"></div>
+    `;
+
+    const layerList = panel.querySelector(".layer-list");
+
+    // list of layer groups
+    // Layers accesses each unique layer in style.json
+    // Label groups all the layers under the label for toggling on/off everything in each layerGroup's layers
+    // swatchIcon matches an existing swatch to either an svg or CSS rule
+    const layerGroups = [
+      {
+        label: "Schools",
+        layers: ["schools-symbol"],
+        swatchType: "icon",
+        swatchIcon: "./school.svg",
+      },
+      {
+        label: "Libraries",
+        layers: ["libraries-symbol"],
+        swatchType: "icon",
+        swatchIcon: "./library.svg",
+      },
+      {
+        label: "Airports",
+        layers: ["airports-symbol", "runway-outline", "runway-fill"],
+        swatchType: "icon",
+        swatchIcon: "./airplane.svg",
+      },
+      {
+        label: "KYTC Traffic Counts",
+        layers: ["KYTC Traffic Glow", "KYTC Traffic Counts"],
+        swatchType: "line",
+        swatchClass: "swatch-traffic-line",
+      },
+      {
+        label: "AADT Exposure Contours",
+        layers: ["AADT Exposure Contours", "AADT Exposure Contour Labels"],
+        swatchType: "contours",
+      },
+      {
+        label: "Noise Raster",
+        layers: ["Noise"],
+        swatchType: "gradient",
+      },
+      {
+        label: "Industrial Sites",
+        layers: [
+          "industrial-sites-fill",
+          "industrial-glow-mid",
+          "industrial-outline-core",
+          "Industrial Sites Labels",
+        ],
+        swatchType: "fill",
+        swatchClass: "swatch-industrial",
+      },
+      {
+        label: "Parks",
+        layers: ["KY Parks Fill", "KY Parks Outline", "KY Parks Labels"],
+        swatchType: "fill",
+        swatchClass: "swatch-parks",
+      },
+      {
+        label: "Building",
+        layers: ["Building"],
+        swatchType: "fill",
+        swatchClass: "swatch-building",
+      },
+      {
+        label: "APP Census Tracts",
+        layers: ["APP Census Tracts Fill", "APP Census Tracts Outline"],
+        swatchType: "app-classes",
+      },
+    ];
+
+    function firstLayer(groupLayers) {
+      return groupLayers.find((id) => map.getLayer(id));
+    }
+
+    function visible(groupLayers) {
+      const visibleLayer = firstLayer(groupLayers);
+      if (!visibleLayer) return true;
+      return map.getLayoutProperty(visibleLayer, "visibility") !== "none";
+    }
+
+    function setVisibility(groupLayers, isVisible) {
+      groupLayers.forEach((id) => {
+        if (map.getLayer(id)) {
+          map.setLayoutProperty(
+            id,
+            "visibility",
+            isVisible ? "visible" : "none",
+          );
+        }
+      });
+    }
+
+    // function that controls how each individual or special swatch is constructed
+    function buildSwatch(group) {
+      const swatch = document.createElement("span");
+      swatch.className = "layer-swatch";
+
+      if (group.swatchType === "icon") {
+        swatch.classList.add("layer-swatch-icon");
+        const img = document.createElement("img");
+        img.src = group.swatchIcon;
+        img.alt = "";
+        img.className = "layer-swatch-svg";
+        swatch.appendChild(img);
+        return swatch;
+      }
+
+      if (group.swatchType === "gradient") {
+        swatch.classList.add("layer-swatch-gradient");
+        return swatch;
+      }
+
+      if (group.swatchType === "line") {
+        swatch.classList.add("layer-swatch-line-wrap");
+        swatch.innerHTML = `<span class="layer-swatch-line ${group.swatchClass}"></span>`;
+        return swatch;
+      }
+
+      if (group.swatchType === "contours") {
+        swatch.classList.add("layer-swatch-contours");
+        swatch.innerHTML = `
+          <span class="contour-line contour-100"></span>
+          <span class="contour-line contour-200"></span>
+          <span class="contour-line contour-300"></span>
+          <span class="contour-line contour-400"></span>
+          <span class="contour-line contour-500"></span>
+        `;
+        return swatch;
+      }
+
+      if (group.swatchType === "app-classes") {
+        swatch.classList.add("layer-swatch-line-wrap");
+        swatch.innerHTML = `<span class="layer-swatch-line swatch-app-outline"></span>`;
+        return swatch;
+      }
+
+      swatch.classList.add(group.swatchClass);
+      return swatch;
+    }
+
+    layerGroups.forEach((group) => {
+      const row = document.createElement("label");
+      row.className = "layer-row";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = true;
+
+      checkbox.addEventListener("change", () => {
+        setVisibility(group.layers, checkbox.checked);
+      });
+
+      const swatch = buildSwatch(group);
+
+      const textWrap = document.createElement("span");
+      textWrap.className = "layer-row-text";
+
+      const text = document.createElement("span");
+      text.className = "layer-row-label";
+      text.textContent = group.label;
+      textWrap.appendChild(text);
+
+      if (group.swatchType === "app-classes") {
+        const breakdown = document.createElement("div");
+        breakdown.className = "layer-row-sublegend app-sublegend";
+        breakdown.innerHTML = `
+          <div class="app-sublegend-title">% Area Noise-Exposed</div>
+          <div class="app-sublegend-row">
+            <span class="app-sublegend-swatch app-low"></span>
+            <span>0–10%</span>
+          </div>
+          <div class="app-sublegend-row">
+            <span class="app-sublegend-swatch app-midlow"></span>
+            <span>10–25%</span>
+          </div>
+          <div class="app-sublegend-row">
+            <span class="app-sublegend-swatch app-midhigh"></span>
+            <span>25–50%</span>
+          </div>
+          <div class="app-sublegend-row">
+            <span class="app-sublegend-swatch app-high"></span>
+            <span>>50%</span>
+          </div>
+        `;
+        textWrap.appendChild(breakdown);
+      }
+
+      row.appendChild(checkbox);
+      row.appendChild(swatch);
+      row.appendChild(textWrap);
+      layerList.appendChild(row);
+
+      group.checkbox = checkbox;
+    });
+
+    const syncCheckboxes = () => {
+      layerGroups.forEach((group) => {
+        if (group.checkbox) {
+          group.checkbox.checked = visible(group.layers);
+        }
+      });
+    };
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      syncCheckboxes();
+      panel.classList.toggle("hidden");
+    });
+
+    map.on("load", syncCheckboxes);
+    map.on("styledata", syncCheckboxes);
+
+    document.addEventListener("click", (e) => {
+      if (!container.contains(e.target)) {
+        panel.classList.add("hidden");
+      }
+    });
+
+    container.appendChild(button);
+    container.appendChild(panel);
+
+    this._container = container;
     return container;
   }
 
@@ -318,12 +583,83 @@ map.on("styleimagemissing", async (e) => {
   }
 });
 
+// calculate the ratio of noise-exposed area to total area for Census Tracts
+function tractRatio(properties) {
+  const sqMiles = Number(properties?.Sq_Miles);
+  const noiseSqMiles = Number(properties?.NoiseSensitive_SqMiles);
+
+  if (!Number.isFinite(sqMiles) || sqMiles <= 0) return null;
+  if (!Number.isFinite(noiseSqMiles)) return null;
+
+  return (noiseSqMiles / sqMiles) * 100;
+}
+
+// Popup information for census tracts
+function appTractHtml(properties) {
+  if (!properties) return "";
+
+  const tractId = properties?.Tract_FIPS ?? "N/A";
+  const pop2020 = Number(properties?.Pop2020);
+  const sqMiles = Number(properties?.Sq_Miles);
+  const noiseResidences = Number(properties?.NoiseSensitive_Residence_Count);
+  const pctNoiseExposed = tractRatio(properties);
+
+  return `
+    <div class="map-popup-divider"></div>
+    <div class="map-popup-title">APP Census Tract</div>
+    <div class="map-popup-row">
+      <span class="label">Census Tract ID:</span>
+      <span class="value">${tractId}</span>
+    </div>
+    <div class="map-popup-row">
+      <span class="label">2020 Census Population:</span>
+      <span class="value">${
+        Number.isFinite(pop2020) ? pop2020.toLocaleString() : "N/A"
+      }</span>
+    </div>
+    <div class="map-popup-row">
+      <span class="label">Total Area (mi&sup2;):</span>
+      <span class="value">${
+        Number.isFinite(sqMiles) ? sqMiles.toFixed(2) : "N/A"
+      }</span>
+    </div>
+    <div class="map-popup-row">
+      <span class="label">Pct. Noise-Exposed Area:</span>
+      <span class="value">${
+        pctNoiseExposed !== null ? pctNoiseExposed.toFixed(1) + "%" : "N/A"
+      }</span>
+    </div>
+    <div class="map-popup-row">
+      <span class="label">Est. Noise-Exposed Residences:</span>
+      <span class="value">${
+        Number.isFinite(noiseResidences)
+          ? noiseResidences === 0
+            ? "Unknown"
+            : noiseResidences.toLocaleString()
+          : "N/A"
+      }</span>
+    </div>
+  `;
+}
+
+// defined HTML logic for hover popup
+function hoverHtml(title, value) {
+  return `
+    <div class="map-popup">
+      <div class="map-popup-title">${title}</div>
+      <div class="map-popup-row">
+        <span class="value">${value}</span>
+      </div>
+    </div>
+  `;
+}
+
 // allow popups/click events to happen for overlapping features
 // in this case, for roads, build the popup from the tile attributes
 // for noise polygons, build road popup but also allow for the noise polygon VALUE to work with legend
 map.on("click", (e) => {
   const features = map.queryRenderedFeatures(e.point, {
-    layers: ["KYTC Traffic Counts", "Noise polygons"],
+    layers: ["KYTC Traffic Counts", "Noise polygons", "APP Census Tracts Fill"],
   });
 
   const roadFeature = features.find(
@@ -331,6 +667,10 @@ map.on("click", (e) => {
   );
 
   const noiseFeature = features.find((f) => f.layer.id === "Noise polygons");
+
+  const appFeature = features.find(
+    (f) => f.layer.id === "APP Census Tracts Fill",
+  );
 
   // always let the noise polygon update the legend if data is present
   if (noiseFeature) {
@@ -343,165 +683,145 @@ map.on("click", (e) => {
     indicator.classList.remove("warning-level");
   }
 
-  // if no road was clicked, stop here
-  if (!roadFeature) return;
+  const appHtml = appFeature ? appTractHtml(appFeature.properties) : "";
 
-  // roads popup
-  const p = roadFeature.properties;
+  // if roadway clicked, build roadway popup and append APP tract info if present
+  if (roadFeature) {
+    const p = roadFeature.properties;
 
-  let noiseHtml = "";
-  if (noiseFeature) {
-    const baseDb = Number(noiseFeature.properties?.VALUE);
-    const rows = buildRange(baseDb);
-    const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
+    let noiseHtml = "";
+    if (noiseFeature) {
+      const baseDb = Number(noiseFeature.properties?.VALUE);
+      const rows = buildRange(baseDb);
+      const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
 
-    noiseHtml = `
-      <div class="map-popup-divider"></div>
-      <div class="map-popup-title">Estimated Noise Range</div>
-      <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay. Estimates may greatly vary from clicked mapped values.</div>
-      ${
-        mappedValue
-          ? `
-            <div class="map-popup-row">
-              <span class="label">BTS mapped value:</span>
-              <span class="${noiseVal(baseDb)}">${mappedValue} dB</span>
-            </div>
-          `
-          : ""
-      }
-      ${rows
-        .map(
-          (r) => `
-        <div class="map-popup-row">
-          <span class="label">${r.distance} ft decay:</span>
-          <span class="${
-            warning(Number(r.soft)) ||
-            warning(Number(r.hard))
-              ? "value warning-level"
-              : "value"
-          }">
-  ${r.soft} - ${r.hard} dB
-</span>
+      noiseHtml = `
+        <div class="map-popup-divider"></div>
+        <div class="map-popup-title">Estimated Noise Range</div>
+        <div class="map-popup-subtitle">Estimate based on BTS mapped value & distance decay. Estimates may greatly vary from clicked mapped values.</div><br>
+        ${
+          mappedValue
+            ? `
+              <div class="map-popup-row">
+                <span class="label">BTS mapped value:</span>
+                <span class="${noiseVal(baseDb)}">${mappedValue} dB</span>
+              </div>
+            `
+            : ""
+        }
+        ${rows
+          .map(
+            (r) => `
+          <div class="map-popup-row">
+            <span class="label">${r.distance} ft decay:</span>
+            <span class="${
+              warning(Number(r.soft)) || warning(Number(r.hard))
+                ? "value warning-level"
+                : "value"
+            }">
+              ${r.soft} - ${r.hard} dB
+            </span>
+          </div>
+        `,
+          )
+          .join("")}
+      `;
+    }
+
+    const propertyRows = checkNull(p, roadFields);
+
+    new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: true,
+      className: "popup",
+    })
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `
+        <div class="map-popup">
+          <div class="map-popup-title">Traffic Counts</div>
+          ${propertyRows}
+          ${noiseHtml}
+          ${appHtml}
         </div>
       `,
-        )
-        .join("")}
-    `;
+      )
+      .addTo(map);
+
+    return;
   }
 
-  const propertyRows = checkNull(p, roadFields);
-
-  new maplibregl.Popup({
-    closeButton: true,
-    closeOnClick: true,
-    className: "popup",
-  })
-    .setLngLat(e.lngLat)
-    .setHTML(
-      `
-      <div class="map-popup">
-        <div class="map-popup-title">Traffic Counts</div>
-        ${propertyRows}
-        ${noiseHtml}
-      </div>
-    `,
-    )
-    .addTo(map);
-});
-
-// popup for libraries
-map.on("click", "libraries-symbol", (e) => {
-  const f = e.features?.[0];
-  if (!f) return;
-
-  const name = f.properties?.Library_Name || "Library";
-
-  new maplibregl.Popup({
-    closeButton: true,
-    closeOnClick: true,
-    className: "popup",
-  })
-    .setLngLat(e.lngLat)
-    .setHTML(
-      `
-      <div class="map-popup">
-        <div class="map-popup-title">Library</div>
-        <div class="map-popup-row">
-          <span class="value">${name}</span>
+  // if no roadway but APP tract clicked, show tract popup by itself
+  if (appFeature) {
+    new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: true,
+      className: "popup",
+    })
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `
+        <div class="map-popup">
+          ${appHtml.replace(`<div class="map-popup-divider"></div>`, "")}
         </div>
-      </div>
-    `,
-    )
-    .addTo(map);
-});
+      `,
+      )
+      .addTo(map);
 
-// popup for schools
-map.on("click", "schools-symbol", (e) => {
-  const f = e.features?.[0];
-  if (!f) return;
-
-  const name = f.properties?.SCHNAME || "School";
-
-  new maplibregl.Popup({
-    closeButton: true,
-    closeOnClick: true,
-    className: "popup",
-  })
-    .setLngLat(e.lngLat)
-    .setHTML(
-      `
-      <div class="map-popup">
-        <div class="map-popup-title">School</div>
-        <div class="map-popup-row">
-          <span class="value">${name}</span>
-        </div>
-      </div>
-    `,
-    )
-    .addTo(map);
-});
-
-map.on("click", "airports-symbol", (e) => {
-  const f = e.features?.[0];
-  if (!f) return;
-
-  const name = f.properties?.FacilityNa || "Airport";
-
-  new maplibregl.Popup({
-    closeButton: true,
-    closeOnClick: true,
-    className: "popup",
-  })
-    .setLngLat(e.lngLat)
-    .setHTML(
-      `
-      <div class="map-popup">
-        <div class="map-popup-title">Airport</div>
-        <div class="map-popup-row">
-          <span class="value">${name}</span>
-        </div>
-      </div>
-    `,
-    )
-    .addTo(map);
+    return;
+  }
 });
 
 // cursor for interactivity
 const interactiveLayers = [
   "KYTC Traffic Counts",
   "Noise polygons",
+  "APP Census Tracts Fill",
   "libraries-symbol",
   "schools-symbol",
   "airports-symbol",
 ];
 
-interactiveLayers.forEach((layer) => {
-  map.on("mouseenter", layer, () => {
+const hoverLayers = {
+  "schools-symbol": {
+    title: "School",
+    field: "SCHNAME",
+    fallback: "School",
+  },
+  "libraries-symbol": {
+    title: "Library",
+    field: "Library_Name",
+    fallback: "Library",
+  },
+  "airports-symbol": {
+    title: "Airport",
+    field: "FacilityNa",
+    fallback: "Airport",
+  },
+};
+
+Object.entries(hoverLayers).forEach(([layerId, config]) => {
+  map.on("mouseenter", layerId, (e) => {
     map.getCanvas().style.cursor = "pointer";
+
+    const f = e.features?.[0];
+    if (!f) return;
+
+    const name = f.properties?.[config.field] || config.fallback;
+
+    hoverPopup
+      .setLngLat(e.lngLat)
+      .setHTML(hoverHtml(config.title, name))
+      .addTo(map);
   });
 
-  map.on("mouseleave", layer, () => {
+  map.on("mousemove", layerId, (e) => {
+    hoverPopup.setLngLat(e.lngLat);
+  });
+
+  map.on("mouseleave", layerId, () => {
     map.getCanvas().style.cursor = "";
+    hoverPopup.remove();
   });
 });
 
@@ -515,6 +835,9 @@ const attrib = new maplibregl.AttributionControl({
     <div>KYTC | USDOT Bureau of Transportation Statistics | KYGovMaps Open Data Portal</div>
   `,
 });
+// custom layer control added to map
+map.addControl(new LayerControl(), "top-right");
+
 // custom info control group
 map.addControl(new InfoControl(), "top-right");
 
