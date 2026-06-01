@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="./sound.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KY Noise Exposure</title>
-    <script type="module" crossorigin src="./assets/index-S90bUW38.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BqJBB8Ah.css">
+    <script type="module" crossorigin src="./assets/index-BROEpQLE.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BUtx1Hwb.css">
   </head>
 
   <body>
@@ -243,6 +243,11 @@
     <div id="heatmap-legend">
       <div class="legend-title">Noise Levels</div>
 
+      <div class="heat-end-labels">
+        <span>45 dB</span>
+        <span>124 dB</span>
+      </div>
+
       <div class="heat-gradient-wrap">
         <div class="heat-gradient-bar"></div>
         <div class="heat-warning-level" aria-hidden="true"></div>
@@ -250,9 +255,12 @@
       </div>
 
       <div class="heat-gradient-labels">
-        <span>45 dB</span>
-        <span id="heatmap-readout">Click map</span>
-        <span>124 dB</span>
+        <span class="heat-range-label">45 dB</span>
+        <div class="readout-group">
+          <span id="heatmap-readout">Click map</span>
+          <span id="heatmap-ref"></span>
+        </div>
+        <span class="heat-range-label">124 dB</span>
       </div>
     </div>
   </body>

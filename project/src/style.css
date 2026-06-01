@@ -152,7 +152,7 @@ h1 {
   margin: 18px 0 6px 0;
   color: #ffce91;
   font-size: 15px;
-  font-weight: 700
+  font-weight: 700;
 }
 
 .info-modal-panel p {
@@ -438,7 +438,7 @@ h1 {
 
 /* fill swatches */
 .swatch-industrial {
-  border: 1px solid rgba(254, 181, 85, 0.8);;
+  border: 1px solid rgba(254, 181, 85, 0.8);
   border-radius: 4px;
   background: rgba(254, 181, 85, 0.8);
 }
@@ -676,6 +676,10 @@ h1 {
   z-index: 2;
 }
 
+.heat-end-labels {
+  display: none;
+}
+
 .heat-gradient-labels {
   position: relative;
   display: grid;
@@ -693,12 +697,28 @@ h1 {
   justify-self: end;
 }
 
-#heatmap-readout {
+.readout-group {
   justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+#heatmap-readout {
   font-weight: 700;
   font-size: 13px;
   color: whitesmoke;
   transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+#heatmap-ref {
+  font-size: 14px;
+  color: #a0a0c0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #heatmap-readout.warning-level {
@@ -747,6 +767,12 @@ h1 {
   color: #ffce91;
   margin-bottom: 6px;
   letter-spacing: 0.02em;
+}
+
+.map-popup-subtitle {
+  font-size: 11px;
+  color: #a0a0c0;
+  margin-bottom: 6px;
 }
 
 .map-popup-row {
@@ -848,6 +874,23 @@ h1 {
 }
 
 @media (max-width: 480px) and (orientation: portrait) {
+  .heat-end-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: whitesmoke;
+    margin-bottom: 2px;
+  }
+
+  .heat-gradient-labels .heat-range-label {
+    display: none;
+  }
+
+  .heat-gradient-labels {
+    display: flex;
+    justify-content: center;
+  }
+
   h1 {
     font-size: 16px;
     padding: 4px 6px;
@@ -855,6 +898,14 @@ h1 {
     left: 10px;
     max-width: 75vw;
     white-space: normal;
+  }
+
+  #heatmap-readout {
+    font-size: 12px;
+  }
+
+  #heatmap-ref {
+    font-size: 12px;
   }
 
   .layer-panel {

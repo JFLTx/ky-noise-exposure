@@ -241,6 +241,11 @@
     <div id="heatmap-legend">
       <div class="legend-title">Noise Levels</div>
 
+      <div class="heat-end-labels">
+        <span>45 dB</span>
+        <span>124 dB</span>
+      </div>
+
       <div class="heat-gradient-wrap">
         <div class="heat-gradient-bar"></div>
         <div class="heat-warning-level" aria-hidden="true"></div>
@@ -248,9 +253,12 @@
       </div>
 
       <div class="heat-gradient-labels">
-        <span>45 dB</span>
-        <span id="heatmap-readout">Click map</span>
-        <span>124 dB</span>
+        <span class="heat-range-label">45 dB</span>
+        <div class="readout-group">
+          <span id="heatmap-readout">Click map</span>
+          <span id="heatmap-ref"></span>
+        </div>
+        <span class="heat-range-label">124 dB</span>
       </div>
     </div>
   </body>

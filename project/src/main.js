@@ -48,9 +48,26 @@ const min = 45;
 const max = 124;
 const warningVal = 55; // value for EPA standard,
 
+const soundReferenceData = [
+  { db: 110, label: "Rock Band at 16 ft" },
+  { db: 105, label: "Jet Over-Flight at 1,000 ft" },
+  { db: 100, label: "Inside New York Subway Train" },
+  { db: 95, label: "Gas Lawn Mower at 3 ft" },
+  { db: 90, label: "Food Blender at 3 ft" },
+  { db: 85, label: "Diesel Truck at 150 ft" },
+  { db: 80, label: "Noisy Urban Area-Daytime" },
+  { db: 75, label: "Shouting at 3 ft" },
+  { db: 70, label: "Gas Lawn Mower at 100 ft" },
+  { db: 65, label: "Suburban Commercial Area" },
+  { db: 55, label: "Quiet Urban Area-Daytime" },
+  { db: 50, label: "Dishwasher in Next Room" },
+  { db: 45, label: "Quiet Urban Area at Night" },
+];
+
 // set variables to access elements in HTML
 const indicator = document.getElementById("heatmap-indicator");
 const readout = document.getElementById("heatmap-readout");
+const refEl = document.getElementById("heatmap-ref");
 const minZoom = 10; // min zoom level for noise polygon interactivity
 
 // hoverPopup for our SVG symbols
@@ -467,6 +484,7 @@ function updateLegend(value) {
   indicator.style.opacity = "1";
 
   readout.textContent = `${pretty} dB`;
+  refEl.textContent = `~ ${closestReference(clamped)}`;
 
   readout.classList.toggle("warning-level", warning(clamped));
   indicator.classList.toggle("warning-level", warning(clamped));
@@ -511,6 +529,43 @@ function warning(value) {
 
 function noiseVal(value) {
   return warning(value) ? "value warning-level" : "value";
+}
+
+function soundReferenceHtml(baseDb) {
+  if (!Number.isFinite(baseDb)) return "";
+
+  const above = soundReferenceData
+    .filter((e) => e.db >= baseDb)
+    .sort((a, b) => a.db - b.db)[0];
+
+  const below = soundReferenceData
+    .filter((e) => e.db < baseDb)
+    .sort((a, b) => b.db - a.db)[0];
+
+  const entries = [above, below].filter(Boolean);
+  if (!entries.length) return "";
+
+  const rows = entries
+    .map(
+      (e) => `
+      <div class="map-popup-row">
+        <span class="label">${e.label}</span>
+        <span class="${noiseVal(e.db)}">${e.db} dB</span>
+      </div>`,
+    )
+    .join("");
+
+  return `
+    <div class="map-popup-divider"></div>
+    <div class="map-popup-title">Sound Level Reference</div>
+    <div class="map-popup-subtitle">Comparable everyday sounds near this level:</div>
+    ${rows}`;
+}
+
+function closestReference(value) {
+  return [...soundReferenceData].sort(
+    (a, b) => Math.abs(a.db - value) - Math.abs(b.db - value),
+  )[0]?.label ?? "";
 }
 
 // function to check null values for popups
@@ -679,6 +734,7 @@ map.on("click", (e) => {
   } else {
     indicator.style.opacity = "0";
     readout.textContent = "No Noise Data"; // handle no data for user click
+    refEl.textContent = "";
     readout.classList.remove("warning-level");
     indicator.classList.remove("warning-level");
   }
@@ -689,11 +745,14 @@ map.on("click", (e) => {
   if (roadFeature) {
     const p = roadFeature.properties;
 
+    let refHtml = "";
     let noiseHtml = "";
     if (noiseFeature) {
       const baseDb = Number(noiseFeature.properties?.VALUE);
       const rows = buildRange(baseDb);
       const mappedValue = Number.isFinite(baseDb) ? baseDb.toFixed(1) : null;
+
+      refHtml = soundReferenceHtml(baseDb);
 
       noiseHtml = `
         <div class="map-popup-divider"></div>
@@ -741,6 +800,7 @@ map.on("click", (e) => {
         <div class="map-popup">
           <div class="map-popup-title">Traffic Counts</div>
           ${propertyRows}
+          ${refHtml}
           ${noiseHtml}
           ${appHtml}
         </div>
